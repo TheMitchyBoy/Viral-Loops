@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fef7ee;
+  --color-brand-100: #fdedd6;
+  --color-brand-200: #fad7ac;
+  --color-brand-300: #f6ba77;
+  --color-brand-400: #f19340;
+  --color-brand-500: #ed751a;
+  --color-brand-600: #de5a10;
+  --color-brand-700: #b84310;
+  --color-brand-800: #933515;
+  --color-brand-900: #772d14;
+  --color-brand-950: #401408;
+
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.prose-news {
+  font-family: var(--font-serif);
+  line-height: 1.8;
+}
+
+.prose-news p {
+  margin-bottom: 1.25rem;
+}
+
+.prose-news strong {
+  font-weight: 700;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out;
+}
+
+.animate-confetti {
+  animation: confetti 1s ease-out forwards;
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tier-free { @apply bg-emerald-100 text-emerald-800; }
+.tier-share { @apply bg-amber-100 text-amber-800; }
+.tier-premium { @apply bg-purple-100 text-purple-800; }
