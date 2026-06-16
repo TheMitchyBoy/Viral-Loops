@@ -52,6 +52,8 @@ export interface UserProfile {
   name: string;
   followedFacebook: boolean;
   followedAt?: string;
+  facebookUserId?: string;
+  facebookName?: string;
   unlockedContent: string[];
   earnedBadges: string[];
 }

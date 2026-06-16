@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export default function Header() {
   const { profile, setFollowTarget, setShowFollowModal } = useUser();
-  const perk = getFollowerPerk(profile.followedFacebook);
+  const perk = getFollowerPerk(profile);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
@@ -28,7 +28,7 @@ export default function Header() {
           </span>
           <span className="sm:hidden">Follow to unlock exclusives</span>
           <Link href="/rewards" className="flex items-center gap-1 hover:underline font-medium">
-            {profile.followedFacebook ? (
+            {profile.followedFacebook && profile.facebookUserId ? (
               <>
                 <Check className="w-3 h-3" /> {perk.badge} {perk.name}
               </>
@@ -66,7 +66,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            {!profile.followedFacebook && (
+            {!profile.followedFacebook || !profile.facebookUserId ? (
               <button
                 onClick={() => {
                   setFollowTarget({ id: "follow", slug: "", title: "Riverside Daily Exclusive Content" });
@@ -77,7 +77,7 @@ export default function Header() {
                 <Facebook className="w-4 h-4" />
                 Follow to Unlock
               </button>
-            )}
+            ) : null}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 text-stone-600"

@@ -1,11 +1,12 @@
 import { UserProfile, Badge } from "./types";
+import { FACEBOOK_PAGE_URL } from "./facebook-config";
 
 const STORAGE_KEY = "riverside-daily-user";
 
-export const FACEBOOK_PAGE_URL = "https://www.facebook.com/riversidedaily";
+export { FACEBOOK_PAGE_URL };
 
 const BADGES: Badge[] = [
-  { id: "facebook-follower", name: "Facebook Follower", description: "Followed Riverside Daily on Facebook", icon: "👍" },
+  { id: "facebook-follower", name: "Facebook Follower", description: "Verified follower of Riverside Daily on Facebook", icon: "👍" },
   { id: "investigator", name: "Investigator", description: "Unlocked an exclusive investigation", icon: "🔍" },
   { id: "insider", name: "Insider", description: "Unlocked all exclusive content", icon: "💎" },
   { id: "community-member", name: "Community Member", description: "Joined the Riverside Daily community", icon: "🏘️" },
@@ -32,6 +33,8 @@ function normalizeProfile(raw: Record<string, unknown>): UserProfile {
     name: typeof raw.name === "string" ? raw.name : base.name,
     followedFacebook: Boolean(raw.followedFacebook),
     followedAt: typeof raw.followedAt === "string" ? raw.followedAt : undefined,
+    facebookUserId: typeof raw.facebookUserId === "string" ? raw.facebookUserId : undefined,
+    facebookName: typeof raw.facebookName === "string" ? raw.facebookName : undefined,
     unlockedContent: Array.isArray(raw.unlockedContent) ? (raw.unlockedContent as string[]) : [],
     earnedBadges: Array.isArray(raw.earnedBadges) ? (raw.earnedBadges as string[]) : [],
   };
@@ -53,13 +56,22 @@ export function saveProfile(profile: UserProfile): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
 }
 
-export function confirmFacebookFollow(contentId?: string): UserProfile {
+export function applyVerifiedFacebookFollow(
+  facebookUserId: string,
+  facebookName: string | undefined,
+  contentId?: string
+): UserProfile {
   const profile = loadProfile();
 
   profile.followedFacebook = true;
-  profile.followedAt = profile.followedAt ?? new Date().toISOString();
+  profile.followedAt = new Date().toISOString();
+  profile.facebookUserId = facebookUserId;
+  if (facebookName) {
+    profile.facebookName = facebookName;
+    profile.name = facebookName;
+  }
 
-  if (contentId && !profile.unlockedContent.includes(contentId)) {
+  if (contentId && contentId !== "follow" && !profile.unlockedContent.includes(contentId)) {
     profile.unlockedContent.push(contentId);
   }
 
@@ -71,7 +83,7 @@ export function confirmFacebookFollow(contentId?: string): UserProfile {
 function checkBadges(profile: UserProfile): void {
   const earned = new Set(profile.earnedBadges);
 
-  if (profile.followedFacebook) {
+  if (profile.followedFacebook && profile.facebookUserId) {
     earned.add("facebook-follower");
     earned.add("community-member");
   }
@@ -83,7 +95,7 @@ function checkBadges(profile: UserProfile): void {
 
 export function isContentUnlocked(profile: UserProfile, tier: string): boolean {
   if (tier === "free") return true;
-  return profile.followedFacebook;
+  return profile.followedFacebook && Boolean(profile.facebookUserId);
 }
 
 export function getBadgeInfo(badgeId: string): Badge | undefined {

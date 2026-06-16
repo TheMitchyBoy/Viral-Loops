@@ -301,9 +301,9 @@ export function getNewsByCategory(category: string): NewsItem[] {
   return NEWS_ITEMS.filter((item) => item.category === category);
 }
 
-export function getFollowerPerk(followedFacebook: boolean): RewardTier {
-  if (!followedFacebook) return MEMBER_PERKS[0];
-  return MEMBER_PERKS[1];
+export function getFollowerPerk(profile: { followedFacebook: boolean; facebookUserId?: string }): RewardTier {
+  if (profile.followedFacebook && profile.facebookUserId) return MEMBER_PERKS[1];
+  return MEMBER_PERKS[0];
 }
 
 export function getLockedContentCount(): number {

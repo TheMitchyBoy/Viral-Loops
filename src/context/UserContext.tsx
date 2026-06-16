@@ -2,7 +2,9 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { UserProfile } from "@/lib/types";
-import { loadProfile, confirmFacebookFollow, isContentUnlocked } from "@/lib/viral-engine";
+import { loadProfile, applyVerifiedFacebookFollow, isContentUnlocked } from "@/lib/viral-engine";
+import { loginWithFacebook, verifyFacebookFollow } from "@/lib/facebook-client";
+import { isFacebookClientConfigured } from "@/lib/facebook-config";
 
 interface FollowTarget {
   id: string;
@@ -13,8 +15,9 @@ interface FollowTarget {
 interface UserContextType {
   profile: UserProfile;
   refreshProfile: () => void;
-  confirmFollow: (contentId?: string) => UserProfile;
+  verifyAndUnlock: (contentId?: string) => Promise<void>;
   checkUnlocked: (tier: string) => boolean;
+  facebookConfigured: boolean;
   showFollowModal: boolean;
   setShowFollowModal: (show: boolean) => void;
   followTarget: FollowTarget | null;
@@ -36,10 +39,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setProfile(loadProfile());
   }, []);
 
-  const confirmFollow = useCallback((contentId?: string) => {
-    const updated = confirmFacebookFollow(contentId);
+  const verifyAndUnlock = useCallback(async (contentId?: string) => {
+    const accessToken = await loginWithFacebook();
+    const result = await verifyFacebookFollow(accessToken);
+
+    if (!result.userId) {
+      throw new Error("Facebook verification did not return a user ID");
+    }
+
+    const updated = applyVerifiedFacebookFollow(result.userId, result.name, contentId);
     setProfile(updated);
-    return updated;
   }, []);
 
   const checkUnlocked = useCallback(
@@ -63,8 +72,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       value={{
         profile,
         refreshProfile,
-        confirmFollow,
+        verifyAndUnlock,
         checkUnlocked,
+        facebookConfigured: isFacebookClientConfigured(),
         showFollowModal,
         setShowFollowModal,
         followTarget,

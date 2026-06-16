@@ -3,6 +3,7 @@ import { UserProvider } from "@/context/UserContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FollowModal from "@/components/FollowModal";
+import FacebookSDK from "@/lib/facebook-client";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="bg-stone-50 text-stone-900 min-h-screen">
         <UserProvider>
+          <FacebookSDK />
           <Header />
           <main>{children}</main>
           <Footer />

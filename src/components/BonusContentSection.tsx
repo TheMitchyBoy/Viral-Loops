@@ -24,7 +24,7 @@ export default function BonusContentSection({ bonuses }: BonusContentSectionProp
     <section className="mt-10 border-t border-stone-200 pt-8">
       <h2 className="text-xl font-bold text-stone-900 mb-1">Bonus Content</h2>
       <p className="text-sm text-stone-500 mb-6">
-        {profile.followedFacebook
+        {profile.followedFacebook && profile.facebookUserId
           ? "Exclusive bonus material for Facebook followers"
           : "Follow on Facebook to unlock exclusive bonus material"}
       </p>
@@ -32,7 +32,7 @@ export default function BonusContentSection({ bonuses }: BonusContentSectionProp
       <div className="grid gap-4">
         {bonuses.map((bonus) => {
           const Icon = typeIcons[bonus.type];
-          const unlocked = profile.followedFacebook;
+          const unlocked = profile.followedFacebook && Boolean(profile.facebookUserId);
 
           return (
             <div

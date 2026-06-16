@@ -12,7 +12,7 @@ interface FollowPromptProps {
 export default function FollowPrompt({ contentId, slug, title }: FollowPromptProps) {
   const { profile, setFollowTarget, setShowFollowModal } = useUser();
 
-  if (profile.followedFacebook) {
+  if (profile.followedFacebook && profile.facebookUserId) {
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 my-8">
         <p className="text-sm text-blue-800">

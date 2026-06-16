@@ -1,6 +1,6 @@
 # Riverside Daily — Local News with Facebook Access
 
-A local news website that uses a Facebook follow loop to give readers and video viewers access to exclusive content in exchange for following the page.
+A local news website that uses a verified Facebook follow loop to give readers access to exclusive content.
 
 ## Features
 
@@ -9,54 +9,66 @@ A local news website that uses a Facebook follow loop to give readers and video 
 - Category browsing, trending sidebar, and featured stories
 - Responsive, modern news-site design
 
-### Facebook Follow Loop
-- **Follow-to-Unlock**: Follow Riverside Daily on Facebook to access exclusive investigations, extended videos, and insider previews
-- **One Follow, Full Access**: A single Facebook follow unlocks all gated content and bonus material
-- **Bonus Content**: Extended articles, bonus videos, and interviews for Facebook followers
-- **Badges**: Earn badges when you follow and unlock exclusive content
+### Verified Facebook Follow Loop
+- **Follow-to-Unlock**: Follow Riverside Daily on Facebook to access exclusive content
+- **Verified via Facebook Login**: Users log in with Facebook; the server checks they like/follow the page via Graph API
+- **One Follow, Full Access**: A verified follow unlocks all gated content and bonus material
+- **Bonus Content**: Extended articles, bonus videos, and interviews for verified followers
 
 ## Getting Started
 
 ```bash
 npm install
+cp .env.example .env.local
+# Add your Facebook App ID, App Secret, and Page ID
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## How the Follow Loop Works
+## Facebook Setup (Required)
 
-1. **Read/Watch** — User consumes free local news content
-2. **Hit Locked Content** — Exclusive investigations and videos show a follow prompt
-3. **Follow on Facebook** — User follows Riverside Daily on Facebook
-4. **Confirm Follow** — User confirms they've followed to unlock content
-5. **Full Access** — All exclusive articles, videos, and bonus content are unlocked
+1. Create a [Meta for Developers](https://developers.facebook.com/) app
+2. Add **Facebook Login** product
+3. Set **Valid OAuth Redirect URIs** to your site URL (e.g. `http://localhost:3000`)
+4. Copy your **App ID** and **App Secret**
+5. Find your **Page ID** (Facebook Page → About → Page transparency, or Graph API Explorer)
+6. Add to `.env.local`:
+
+```env
+NEXT_PUBLIC_FACEBOOK_APP_ID=your_app_id
+FACEBOOK_APP_SECRET=your_app_secret
+NEXT_PUBLIC_FACEBOOK_PAGE_ID=your_numeric_page_id
+NEXT_PUBLIC_FACEBOOK_PAGE_URL=https://www.facebook.com/yourpage
+```
+
+### Permissions
+
+Verification uses the `user_likes` permission to confirm the user likes/follows your page. In **Development** mode, only app admins, developers, and test users can grant this. Submit for **App Review** before going to production.
+
+## How Verification Works
+
+1. User opens locked content
+2. User follows/likes the Facebook page
+3. User clicks **Verify with Facebook** → Facebook Login popup
+4. Client sends access token to `/api/facebook/verify-follow`
+5. Server validates token and checks Graph API `me/likes` for your Page ID
+6. If verified, exclusive content unlocks
 
 ## Tech Stack
 
 - **Next.js 15** (App Router)
-- **TypeScript**
-- **Tailwind CSS 4**
-- Local storage for follow status and unlock tracking (demo mode)
-
-## Configuration
-
-Set the Facebook page URL in `src/lib/viral-engine.ts`:
-
-```ts
-export const FACEBOOK_PAGE_URL = "https://www.facebook.com/riversidedaily";
-```
+- **Facebook JavaScript SDK** + **Graph API**
+- **TypeScript** + **Tailwind CSS 4**
+- Local storage for verified follow status
 
 ## Project Structure
 
 ```
 src/
-├── app/                  # Next.js pages (home, article, video, rewards, category)
-├── components/           # UI components (Header, NewsCard, FollowModal, etc.)
-├── context/              # User profile & follow state
-└── lib/
-    ├── data.ts           # Mock news content & member perks
-    ├── types.ts          # TypeScript interfaces
-    ├── viral-engine.ts   # Facebook follow tracking & unlocks
-    └── utils.ts          # Formatting helpers
+├── app/api/facebook/verify-follow/   # Server-side follow verification
+├── components/FollowModal.tsx        # Follow + verify UI
+├── lib/facebook-config.ts            # Env configuration
+├── lib/facebook-verify.ts            # Graph API verification logic
+└── lib/viral-engine.ts               # Profile & unlock state
 ```
