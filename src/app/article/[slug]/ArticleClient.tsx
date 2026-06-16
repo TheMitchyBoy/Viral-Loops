@@ -6,10 +6,10 @@ import { NewsItem } from "@/lib/types";
 import { getBonusForContent } from "@/lib/data";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
-import SharePrompt from "@/components/SharePrompt";
+import FollowPrompt from "@/components/FollowPrompt";
 import LockOverlay from "@/components/LockOverlay";
 import BonusContentSection from "@/components/BonusContentSection";
-import { Clock, User, Share2, Eye, ArrowLeft } from "lucide-react";
+import { Clock, User, Eye, ArrowLeft } from "lucide-react";
 
 interface ArticlePageProps {
   article: NewsItem;
@@ -17,7 +17,7 @@ interface ArticlePageProps {
 
 export default function ArticleClient({ article }: ArticlePageProps) {
   const { checkUnlocked } = useUser();
-  const unlocked = checkUnlocked(article.id, article.tier, article.unlockRequirement);
+  const unlocked = checkUnlocked(article.tier);
   const bonuses = getBonusForContent(article.id);
 
   return (
@@ -53,9 +53,6 @@ export default function ArticleClient({ article }: ArticlePageProps) {
         )}
         <span className="flex items-center gap-1.5">
           <Eye className="w-4 h-4" /> {formatNumber(article.viewCount)} views
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Share2 className="w-4 h-4" /> {formatNumber(article.shareCount)} shares
         </span>
       </div>
 
@@ -95,29 +92,15 @@ export default function ArticleClient({ article }: ArticlePageProps) {
             })}
           </div>
 
-          <SharePrompt
-            contentId={article.id}
-            slug={article.slug}
-            title={article.title}
-            shareReward={article.shareReward}
-            shareCount={article.shareCount}
-          />
-
-          <BonusContentSection bonuses={bonuses} parentId={article.id} />
+          <FollowPrompt contentId={article.id} slug={article.slug} title={article.title} />
+          <BonusContentSection bonuses={bonuses} />
         </>
       ) : (
         <>
           <div className="prose-news text-stone-800 text-lg blur-sm select-none max-h-64 overflow-hidden">
             <p>{article.body?.substring(0, 500)}...</p>
           </div>
-          <LockOverlay
-            contentId={article.id}
-            slug={article.slug}
-            title={article.title}
-            tier={article.tier}
-            shareReward={article.shareReward}
-            unlockRequirement={article.unlockRequirement}
-          />
+          <LockOverlay contentId={article.id} slug={article.slug} title={article.title} />
         </>
       )}
     </article>

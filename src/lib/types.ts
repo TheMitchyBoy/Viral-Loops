@@ -1,6 +1,6 @@
 export type ContentType = "article" | "video";
 
-export type ContentTier = "free" | "share-unlock" | "premium";
+export type ContentTier = "free" | "follow-unlock" | "premium";
 
 export interface NewsItem {
   id: string;
@@ -17,13 +17,8 @@ export interface NewsItem {
   duration?: number;
   imageUrl: string;
   videoUrl?: string;
-  shareReward: number;
-  unlockRequirement?: {
-    type: "shares" | "points" | "referrals";
-    count: number;
-  };
   tags: string[];
-  shareCount: number;
+  followerCount: number;
   viewCount: number;
 }
 
@@ -33,14 +28,12 @@ export interface BonusContent {
   title: string;
   description: string;
   type: "extended-article" | "bonus-video" | "photo-gallery" | "interview";
-  unlockShares: number;
   content: string;
 }
 
 export interface RewardTier {
   id: string;
   name: string;
-  minPoints: number;
   perks: string[];
   badge: string;
   color: string;
@@ -57,27 +50,15 @@ export interface Badge {
 export interface UserProfile {
   id: string;
   name: string;
-  referralCode: string;
-  points: number;
-  totalShares: number;
-  totalReferrals: number;
+  followedFacebook: boolean;
+  followedAt?: string;
   unlockedContent: string[];
   earnedBadges: string[];
-  shareStreak: number;
-  lastShareDate?: string;
 }
 
-export interface ShareEvent {
-  contentId: string;
-  platform: "twitter" | "facebook" | "whatsapp" | "email" | "copy";
-  timestamp: string;
-  referralCode: string;
-}
-
-export interface LeaderboardEntry {
+export interface CommunityMember {
   rank: number;
   name: string;
-  points: number;
-  shares: number;
   badge: string;
+  label: string;
 }

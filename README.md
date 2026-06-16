@@ -1,6 +1,6 @@
-# Riverside Daily — Local News with Viral Loops
+# Riverside Daily — Local News with Facebook Access
 
-A local news website that uses viral loop mechanics to encourage readers and video viewers to share content online in exchange for rewards and exclusive content.
+A local news website that uses a Facebook follow loop to give readers and video viewers access to exclusive content in exchange for following the page.
 
 ## Features
 
@@ -9,14 +9,11 @@ A local news website that uses viral loop mechanics to encourage readers and vid
 - Category browsing, trending sidebar, and featured stories
 - Responsive, modern news-site design
 
-### Viral Loop Engine
-- **Share-to-Earn**: Share any story on Twitter/X, Facebook, WhatsApp, or email to earn reward points
-- **Share-to-Unlock**: Exclusive investigations and extended videos require sharing to access
-- **Referral System**: Unique referral codes — earn 50 points when friends join via your link
-- **Reward Tiers**: Reader → Contributor → Ambassador → Insider with escalating perks
-- **Badges & Streaks**: Gamified badges for sharing milestones and daily streaks
-- **Bonus Content**: Extended articles, bonus videos, and interviews unlocked through sharing
-- **Leaderboard**: Community ranking of top sharers
+### Facebook Follow Loop
+- **Follow-to-Unlock**: Follow Riverside Daily on Facebook to access exclusive investigations, extended videos, and insider previews
+- **One Follow, Full Access**: A single Facebook follow unlocks all gated content and bonus material
+- **Bonus Content**: Extended articles, bonus videos, and interviews for Facebook followers
+- **Badges**: Earn badges when you follow and unlock exclusive content
 
 ## Getting Started
 
@@ -27,34 +24,39 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## How the Follow Loop Works
+
+1. **Read/Watch** — User consumes free local news content
+2. **Hit Locked Content** — Exclusive investigations and videos show a follow prompt
+3. **Follow on Facebook** — User follows Riverside Daily on Facebook
+4. **Confirm Follow** — User confirms they've followed to unlock content
+5. **Full Access** — All exclusive articles, videos, and bonus content are unlocked
+
 ## Tech Stack
 
 - **Next.js 15** (App Router)
 - **TypeScript**
 - **Tailwind CSS 4**
-- **Lucide React** icons
-- Local storage for user profile, points, and share tracking (demo mode)
+- Local storage for follow status and unlock tracking (demo mode)
 
-## How the Viral Loop Works
+## Configuration
 
-1. **Read/Watch** — User consumes free local news content
-2. **Share Prompt** — After reading, user is prompted to share for +15–50 points
-3. **Social Share** — One-click sharing to major platforms with tracked referral URL
-4. **Unlock Content** — Sharing unlocks gated investigations, bonus videos, and premium reports
-5. **Refer Friends** — Referral links bring new readers; referrer earns bonus points
-6. **Climb Tiers** — Accumulated points unlock Insider-tier exclusive content
-7. **Repeat** — Leaderboard, badges, and streaks drive continued engagement
+Set the Facebook page URL in `src/lib/viral-engine.ts`:
+
+```ts
+export const FACEBOOK_PAGE_URL = "https://www.facebook.com/riversidedaily";
+```
 
 ## Project Structure
 
 ```
 src/
 ├── app/                  # Next.js pages (home, article, video, rewards, category)
-├── components/           # UI components (Header, NewsCard, ShareModal, etc.)
-├── context/              # User profile & rewards state
+├── components/           # UI components (Header, NewsCard, FollowModal, etc.)
+├── context/              # User profile & follow state
 └── lib/
-    ├── data.ts           # Mock news content & reward tiers
+    ├── data.ts           # Mock news content & member perks
     ├── types.ts          # TypeScript interfaces
-    ├── viral-engine.ts   # Share tracking, points, badges, unlocks
+    ├── viral-engine.ts   # Facebook follow tracking & unlocks
     └── utils.ts          # Formatting helpers
 ```

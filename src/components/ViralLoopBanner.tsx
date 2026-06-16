@@ -1,25 +1,25 @@
 "use client";
 
-import { Share2, Users, Gift, TrendingUp } from "lucide-react";
+import { BookOpen, Facebook, Unlock, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 export default function ViralLoopBanner() {
   const steps = [
-    { icon: Share2, title: "Read & Watch", desc: "Explore local news, videos, and investigations" },
-    { icon: Gift, title: "Share & Earn", desc: "Share stories on social media to earn reward points" },
-    { icon: Users, title: "Refer Friends", desc: "Invite neighbors with your unique referral link" },
-    { icon: TrendingUp, title: "Unlock More", desc: "Access exclusive content, bonus videos, and Insider reports" },
+    { icon: BookOpen, title: "Read & Watch", desc: "Explore free local news, videos, and community updates" },
+    { icon: Facebook, title: "Follow on Facebook", desc: "Follow Riverside Daily to join our local news community" },
+    { icon: Unlock, title: "Unlock Exclusives", desc: "Get instant access to investigations, bonus videos, and insider previews" },
+    { icon: TrendingUp, title: "Stay Informed", desc: "Breaking news and exclusive content delivered via Facebook" },
   ];
 
   return (
     <section className="gradient-hero rounded-2xl p-8 md:p-12 text-white my-8">
       <div className="max-w-3xl mx-auto text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          The More You Share, The More You Know
+          Follow Us, Unlock the Full Story
         </h2>
         <p className="text-stone-300 text-lg">
-          Riverside Daily rewards readers who help spread important local news.
-          Share stories, earn points, and unlock exclusive investigations and bonus content.
+          Riverside Daily keeps critical local news free for everyone.
+          Follow us on Facebook to unlock exclusive investigations, extended videos, and insider content.
         </p>
       </div>
 
@@ -39,10 +39,10 @@ export default function ViralLoopBanner() {
       <div className="text-center">
         <Link
           href="/rewards"
-          className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 bg-[#1877F2] hover:bg-[#166FE5] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
         >
-          <Gift className="w-5 h-5" />
-          View Your Rewards
+          <Facebook className="w-5 h-5" />
+          See What You Unlock
         </Link>
       </div>
     </section>

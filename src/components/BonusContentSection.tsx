@@ -3,7 +3,6 @@
 import { BonusContent } from "@/lib/types";
 import { Lock, FileText, Video, Camera, MessageSquare } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-import { getSharesForContent } from "@/lib/viral-engine";
 
 const typeIcons = {
   "extended-article": FileText,
@@ -14,35 +13,32 @@ const typeIcons = {
 
 interface BonusContentSectionProps {
   bonuses: BonusContent[];
-  parentId: string;
 }
 
-export default function BonusContentSection({ bonuses, parentId }: BonusContentSectionProps) {
+export default function BonusContentSection({ bonuses }: BonusContentSectionProps) {
   const { profile } = useUser();
 
   if (bonuses.length === 0) return null;
-
-  const contentShares = getSharesForContent(parentId);
 
   return (
     <section className="mt-10 border-t border-stone-200 pt-8">
       <h2 className="text-xl font-bold text-stone-900 mb-1">Bonus Content</h2>
       <p className="text-sm text-stone-500 mb-6">
-        Share this story to unlock exclusive bonus material
+        {profile.followedFacebook
+          ? "Exclusive bonus material for Facebook followers"
+          : "Follow on Facebook to unlock exclusive bonus material"}
       </p>
 
       <div className="grid gap-4">
         {bonuses.map((bonus) => {
           const Icon = typeIcons[bonus.type];
-          const unlocked = contentShares >= bonus.unlockShares || profile.unlockedContent.includes(parentId);
+          const unlocked = profile.followedFacebook;
 
           return (
             <div
               key={bonus.id}
               className={`rounded-xl border p-5 transition-colors ${
-                unlocked
-                  ? "border-emerald-200 bg-emerald-50"
-                  : "border-stone-200 bg-stone-50"
+                unlocked ? "border-emerald-200 bg-emerald-50" : "border-stone-200 bg-stone-50"
               }`}
             >
               <div className="flex items-start gap-4">
@@ -63,10 +59,7 @@ export default function BonusContentSection({ bonuses, parentId }: BonusContentS
                   {unlocked ? (
                     <p className="text-sm text-stone-700 mt-3 leading-relaxed">{bonus.content}</p>
                   ) : (
-                    <p className="text-xs text-stone-400 mt-2">
-                      Share {bonus.unlockShares} time{bonus.unlockShares > 1 ? "s" : ""} to unlock
-                      {contentShares > 0 && ` (${contentShares}/${bonus.unlockShares})`}
-                    </p>
+                    <p className="text-xs text-stone-400 mt-2">Follow on Facebook to unlock</p>
                   )}
                 </div>
               </div>

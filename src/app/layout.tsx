@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { UserProvider } from "@/context/UserContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ShareModal from "@/components/ShareModal";
+import FollowModal from "@/components/FollowModal";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Riverside Daily — Local News with Rewards",
+  title: "Riverside Daily — Local News with Exclusive Access",
   description:
-    "Your trusted source for Riverside local news. Share stories, earn rewards, and unlock exclusive community content.",
+    "Your trusted source for Riverside local news. Follow us on Facebook to unlock exclusive investigations, bonus videos, and insider content.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
-          <ShareModal />
+          <FollowModal />
         </UserProvider>
       </body>
     </html>

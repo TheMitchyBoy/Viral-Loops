@@ -2,64 +2,50 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { UserProfile } from "@/lib/types";
-import {
-  loadProfile,
-  saveProfile,
-  processReferral,
-  recordShare,
-  isContentUnlocked,
-} from "@/lib/viral-engine";
+import { loadProfile, confirmFacebookFollow, isContentUnlocked } from "@/lib/viral-engine";
+
+interface FollowTarget {
+  id: string;
+  slug: string;
+  title: string;
+}
 
 interface UserContextType {
   profile: UserProfile;
   refreshProfile: () => void;
-  shareContent: (contentId: string, platform: "twitter" | "facebook" | "whatsapp" | "email" | "copy", reward: number) => UserProfile;
-  checkUnlocked: (contentId: string, tier: string, unlockRequirement?: { type: string; count: number }) => boolean;
-  showShareModal: boolean;
-  setShowShareModal: (show: boolean) => void;
-  shareTarget: { id: string; slug: string; title: string; reward: number } | null;
-  setShareTarget: (target: { id: string; slug: string; title: string; reward: number } | null) => void;
+  confirmFollow: (contentId?: string) => UserProfile;
+  checkUnlocked: (tier: string) => boolean;
+  showFollowModal: boolean;
+  setShowFollowModal: (show: boolean) => void;
+  followTarget: FollowTarget | null;
+  setFollowTarget: (target: FollowTarget | null) => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [shareTarget, setShareTarget] = useState<{
-    id: string;
-    slug: string;
-    title: string;
-    reward: number;
-  } | null>(null);
+  const [showFollowModal, setShowFollowModal] = useState(false);
+  const [followTarget, setFollowTarget] = useState<FollowTarget | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    let p = loadProfile();
-    if (ref) {
-      p = processReferral(ref);
-    }
-    setProfile(p);
+    setProfile(loadProfile());
   }, []);
 
   const refreshProfile = useCallback(() => {
     setProfile(loadProfile());
   }, []);
 
-  const shareContent = useCallback(
-    (contentId: string, platform: "twitter" | "facebook" | "whatsapp" | "email" | "copy", reward: number) => {
-      const updated = recordShare(contentId, platform, reward);
-      setProfile(updated);
-      return updated;
-    },
-    []
-  );
+  const confirmFollow = useCallback((contentId?: string) => {
+    const updated = confirmFacebookFollow(contentId);
+    setProfile(updated);
+    return updated;
+  }, []);
 
   const checkUnlocked = useCallback(
-    (contentId: string, tier: string, unlockRequirement?: { type: string; count: number }) => {
+    (tier: string) => {
       if (!profile) return tier === "free";
-      return isContentUnlocked(profile, contentId, tier, unlockRequirement);
+      return isContentUnlocked(profile, tier);
     },
     [profile]
   );
@@ -77,12 +63,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
       value={{
         profile,
         refreshProfile,
-        shareContent,
+        confirmFollow,
         checkUnlocked,
-        showShareModal,
-        setShowShareModal,
-        shareTarget,
-        setShareTarget,
+        showFollowModal,
+        setShowFollowModal,
+        followTarget,
+        setFollowTarget,
       }}
     >
       {children}

@@ -1,38 +1,29 @@
-import { NewsItem, BonusContent, RewardTier, LeaderboardEntry } from "./types";
+import { NewsItem, BonusContent, RewardTier, CommunityMember } from "./types";
 
 export const CITY_NAME = "Riverside";
 export const SITE_NAME = `${CITY_NAME} Daily`;
 
-export const REWARD_TIERS: RewardTier[] = [
+export { FACEBOOK_PAGE_URL } from "./viral-engine";
+
+export const MEMBER_PERKS: RewardTier[] = [
   {
     id: "reader",
     name: "Reader",
-    minPoints: 0,
-    perks: ["Access to free articles", "Daily newsletter"],
+    perks: ["Access to free articles and videos", "Daily news updates"],
     badge: "📖",
     color: "gray",
   },
   {
-    id: "contributor",
-    name: "Contributor",
-    minPoints: 100,
-    perks: ["Unlock share-gated stories", "Community badge", "Early morning brief"],
-    badge: "⭐",
+    id: "follower",
+    name: "Facebook Follower",
+    perks: ["Unlock exclusive investigations", "Bonus video content", "Extended reports & interviews"],
+    badge: "👍",
     color: "blue",
-  },
-  {
-    id: "ambassador",
-    name: "Ambassador",
-    minPoints: 500,
-    perks: ["Exclusive investigations", "Bonus video content", "Priority event invites"],
-    badge: "🏆",
-    color: "amber",
   },
   {
     id: "insider",
     name: "Insider",
-    minPoints: 1500,
-    perks: ["Full archive access", "Reporter Q&A sessions", "VIP town hall invites"],
+    perks: ["Full access to all premium previews", "Early access to breaking stories", "Community updates on Facebook"],
     badge: "💎",
     color: "purple",
   },
@@ -74,9 +65,8 @@ Community input sessions on design details will continue through the summer. Res
     publishedAt: "2026-06-15T08:00:00Z",
     readTime: 5,
     imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=675&fit=crop",
-    shareReward: 25,
     tags: ["downtown", "development", "city council"],
-    shareCount: 342,
+    followerCount: 342,
     viewCount: 4821,
   },
   {
@@ -93,22 +83,19 @@ Community input sessions on design details will continue through the summer. Res
     duration: 4,
     imageUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&h=675&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    shareReward: 30,
     tags: ["sports", "basketball", "high school"],
-    shareCount: 891,
+    followerCount: 891,
     viewCount: 12400,
   },
   {
     id: "3",
     slug: "hidden-contamination-river-investigation",
     type: "article",
-    tier: "share-unlock",
+    tier: "follow-unlock",
     title: "EXCLUSIVE: Documents Reveal Hidden Contamination Near Riverside Creek",
     excerpt:
       "Our investigative team uncovered internal memos suggesting industrial runoff levels near Riverside Creek may exceed safe limits — and residents weren't told.",
-    body: `**This is a share-unlocked investigation.** Share this story to help your neighbors stay informed and unlock the full report.
-
-Preliminary findings from a six-month investigation by the Riverside Daily suggest that contamination levels in sediment samples taken from Riverside Creek near the old Meridian Industrial Park may exceed EPA safety thresholds for heavy metals.
+    body: `Preliminary findings from a six-month investigation by the Riverside Daily suggest that contamination levels in sediment samples taken from Riverside Creek near the old Meridian Industrial Park may exceed EPA safety thresholds for heavy metals.
 
 Internal documents obtained through public records requests show that county environmental officials were aware of elevated readings as early as March 2024, but no public advisory was issued.
 
@@ -118,16 +105,20 @@ Our full report includes:
 - Interviews with 8 affected families
 - Map of contamination spread
 
-**Share this story to unlock the complete investigation and earn 50 reward points.**`,
+**Agency Response**
+County environmental director Thomas Reeves declined multiple interview requests. In a written statement, the department said it is "reviewing historical data and will issue a public update if warranted."
+
+**Community Impact**
+Residents along Creek View Lane report they've noticed unusual odors and discoloration in the water for years. "We assumed someone was looking out for us," said Maria Martinez, who has lived on the street for 22 years. "Turns out nobody told us anything."
+
+The full investigation, including lab results and contamination maps, is available below for Facebook followers.`,
     category: "Investigation",
     author: "Investigative Team",
     publishedAt: "2026-06-15T06:00:00Z",
     readTime: 8,
     imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=675&fit=crop",
-    shareReward: 50,
-    unlockRequirement: { type: "shares", count: 1 },
     tags: ["environment", "investigation", "health"],
-    shareCount: 156,
+    followerCount: 156,
     viewCount: 2100,
   },
   {
@@ -150,16 +141,15 @@ New vendors include a Vietnamese banh mi cart, a heritage grain bakery, and Rive
     publishedAt: "2026-06-14T14:00:00Z",
     readTime: 3,
     imageUrl: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1200&h=675&fit=crop",
-    shareReward: 15,
     tags: ["food", "community", "events"],
-    shareCount: 523,
+    followerCount: 523,
     viewCount: 8900,
   },
   {
     id: "5",
     slug: "mayor-town-hall-recording",
     type: "video",
-    tier: "share-unlock",
+    tier: "follow-unlock",
     title: "WATCH: Mayor's Town Hall — Full Recording + Unreleased Q&A",
     excerpt:
       "Miss the town hall? Watch the full 90-minute session plus 20 minutes of audience Q&A that wasn't broadcast live.",
@@ -169,41 +159,33 @@ New vendors include a Vietnamese banh mi cart, a heritage grain bakery, and Rive
     duration: 110,
     imageUrl: "https://images.unsplash.com/photo-1475721027880-dc378b9a3148?w=1200&h=675&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    shareReward: 40,
-    unlockRequirement: { type: "shares", count: 1 },
     tags: ["politics", "town hall", "mayor"],
-    shareCount: 234,
+    followerCount: 234,
     viewCount: 5600,
   },
   {
     id: "6",
     slug: "new-restaurant-row-preview",
     type: "article",
-    tier: "premium",
+    tier: "follow-unlock",
     title: "INSIDER: First Look at Restaurant Row Opening Next Month",
     excerpt:
       "We got exclusive access to the four restaurants opening on the new Restaurant Row — menus, prices, and opening dates inside.",
-    body: `**Premium Insider Content**
-
-This exclusive preview is available to Insider-tier members (1,500+ points) or by referring 3 friends to Riverside Daily.
-
-Four restaurants are set to open within two weeks of each other on the newly renovated Restaurant Row block between 4th and 5th on Maple Street:
+    body: `Four restaurants are set to open within two weeks of each other on the newly renovated Restaurant Row block between 4th and 5th on Maple Street:
 
 1. **Ember & Oak** — Wood-fired Italian, $$$, opens July 1
 2. **Kim's Table** — Korean fusion small plates, $$, opens July 8
 3. **The Daily Grind 2.0** — Third-wave coffee + bakery, $, opens July 3
 4. **Riverside Raw** — Plant-based fine dining, $$$$, opens July 15
 
-Full menus, chef interviews, and reservation links inside.`,
+We spent a week with each chef team for exclusive previews. Full menus, chef interviews, and reservation links are included below for Facebook followers.`,
     category: "Food",
     author: "Marcus Williams",
     publishedAt: "2026-06-15T10:00:00Z",
     readTime: 6,
     imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=675&fit=crop",
-    shareReward: 35,
-    unlockRequirement: { type: "points", count: 1500 },
     tags: ["food", "restaurants", "exclusive"],
-    shareCount: 89,
+    followerCount: 89,
     viewCount: 1200,
   },
   {
@@ -232,9 +214,8 @@ Parents and teachers packed the board room, with many urging the board to priori
     publishedAt: "2026-06-14T16:00:00Z",
     readTime: 4,
     imageUrl: "https://images.unsplash.com/photo-1580582932707-520aedcedb25?w=1200&h=675&fit=crop",
-    shareReward: 20,
     tags: ["education", "budget", "schools"],
-    shareCount: 445,
+    followerCount: 445,
     viewCount: 6700,
   },
   {
@@ -251,9 +232,8 @@ Parents and teachers packed the board room, with many urging the board to priori
     duration: 6,
     imageUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&h=675&fit=crop",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    shareReward: 20,
     tags: ["events", "weekend", "guide"],
-    shareCount: 678,
+    followerCount: 678,
     viewCount: 9200,
   },
 ];
@@ -265,7 +245,6 @@ export const BONUS_CONTENT: BonusContent[] = [
     title: "Full Lab Results & Contamination Map",
     description: "Complete EPA lab reports from all 12 sampling sites with interactive contamination map",
     type: "extended-article",
-    unlockShares: 1,
     content: "Detailed lab results show lead levels at Site 7 (near Oak Street bridge) at 340 ppm — nearly 3x the EPA residential limit of 120 ppm. Arsenic readings at Sites 3 and 9 also exceeded thresholds...",
   },
   {
@@ -274,7 +253,6 @@ export const BONUS_CONTENT: BonusContent[] = [
     title: "Resident Interview: 'We Weren't Told'",
     description: "8-minute video interview with families living near the creek",
     type: "bonus-video",
-    unlockShares: 2,
     content: "Extended interview footage with the Martinez family, who've lived on Creek View Lane for 22 years...",
   },
   {
@@ -283,7 +261,6 @@ export const BONUS_CONTENT: BonusContent[] = [
     title: "Championship Game: Full Highlights",
     description: "Extended 12-minute highlight reel with coach and player interviews",
     type: "bonus-video",
-    unlockShares: 1,
     content: "Full game highlights including the overtime thriller, post-game celebration, and exclusive locker room interviews...",
   },
   {
@@ -292,17 +269,16 @@ export const BONUS_CONTENT: BonusContent[] = [
     title: "Unreleased Q&A: Audience Questions",
     description: "20 minutes of audience questions that weren't in the live broadcast",
     type: "bonus-video",
-    unlockShares: 1,
     content: "Questions about housing policy, police budget, and the downtown plan that didn't make the live stream...",
   },
 ];
 
-export const LEADERBOARD: LeaderboardEntry[] = [
-  { rank: 1, name: "Maria G.", points: 2840, shares: 47, badge: "💎" },
-  { rank: 2, name: "David K.", points: 1920, shares: 31, badge: "🏆" },
-  { rank: 3, name: "Jennifer L.", points: 1650, shares: 28, badge: "🏆" },
-  { rank: 4, name: "Robert T.", points: 980, shares: 19, badge: "⭐" },
-  { rank: 5, name: "Lisa M.", points: 720, shares: 14, badge: "⭐" },
+export const COMMUNITY_HIGHLIGHTS: CommunityMember[] = [
+  { rank: 1, name: "Maria G.", badge: "💎", label: "Early follower" },
+  { rank: 2, name: "David K.", badge: "👍", label: "Community member" },
+  { rank: 3, name: "Jennifer L.", badge: "👍", label: "Community member" },
+  { rank: 4, name: "Robert T.", badge: "📖", label: "Active reader" },
+  { rank: 5, name: "Lisa M.", badge: "📖", label: "Active reader" },
 ];
 
 export function getNewsBySlug(slug: string): NewsItem | undefined {
@@ -318,18 +294,18 @@ export function getFeaturedNews(): NewsItem[] {
 }
 
 export function getTrendingNews(): NewsItem[] {
-  return [...NEWS_ITEMS].sort((a, b) => b.shareCount - a.shareCount).slice(0, 5);
+  return [...NEWS_ITEMS].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5);
 }
 
 export function getNewsByCategory(category: string): NewsItem[] {
   return NEWS_ITEMS.filter((item) => item.category === category);
 }
 
-export function getRewardTier(points: number): RewardTier {
-  const tiers = [...REWARD_TIERS].reverse();
-  return tiers.find((t) => points >= t.minPoints) ?? REWARD_TIERS[0];
+export function getFollowerPerk(followedFacebook: boolean): RewardTier {
+  if (!followedFacebook) return MEMBER_PERKS[0];
+  return MEMBER_PERKS[1];
 }
 
-export function getNextTier(points: number): RewardTier | null {
-  return REWARD_TIERS.find((t) => t.minPoints > points) ?? null;
+export function getLockedContentCount(): number {
+  return NEWS_ITEMS.filter((item) => item.tier !== "free").length;
 }

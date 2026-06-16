@@ -6,10 +6,10 @@ import { NewsItem } from "@/lib/types";
 import { getBonusForContent } from "@/lib/data";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
-import SharePrompt from "@/components/SharePrompt";
+import FollowPrompt from "@/components/FollowPrompt";
 import LockOverlay from "@/components/LockOverlay";
 import BonusContentSection from "@/components/BonusContentSection";
-import { Play, User, Share2, Eye, ArrowLeft, Clock } from "lucide-react";
+import { Play, User, Eye, ArrowLeft, Clock } from "lucide-react";
 
 interface VideoClientProps {
   video: NewsItem;
@@ -17,7 +17,7 @@ interface VideoClientProps {
 
 export default function VideoClient({ video }: VideoClientProps) {
   const { checkUnlocked } = useUser();
-  const unlocked = checkUnlocked(video.id, video.tier, video.unlockRequirement);
+  const unlocked = checkUnlocked(video.tier);
   const bonuses = getBonusForContent(video.id);
 
   return (
@@ -52,9 +52,6 @@ export default function VideoClient({ video }: VideoClientProps) {
         <span className="flex items-center gap-1.5">
           <Eye className="w-4 h-4" /> {formatNumber(video.viewCount)} views
         </span>
-        <span className="flex items-center gap-1.5">
-          <Share2 className="w-4 h-4" /> {formatNumber(video.shareCount)} shares
-        </span>
       </div>
 
       {unlocked ? (
@@ -78,15 +75,8 @@ export default function VideoClient({ video }: VideoClientProps) {
 
           <p className="text-lg text-stone-600 mb-6">{video.excerpt}</p>
 
-          <SharePrompt
-            contentId={video.id}
-            slug={video.slug}
-            title={video.title}
-            shareReward={video.shareReward}
-            shareCount={video.shareCount}
-          />
-
-          <BonusContentSection bonuses={bonuses} parentId={video.id} />
+          <FollowPrompt contentId={video.id} slug={video.slug} title={video.title} />
+          <BonusContentSection bonuses={bonuses} />
         </>
       ) : (
         <>
@@ -99,14 +89,7 @@ export default function VideoClient({ video }: VideoClientProps) {
             </div>
           </div>
           <p className="text-lg text-stone-600 mb-2">{video.excerpt}</p>
-          <LockOverlay
-            contentId={video.id}
-            slug={video.slug}
-            title={video.title}
-            tier={video.tier}
-            shareReward={video.shareReward}
-            unlockRequirement={video.unlockRequirement}
-          />
+          <LockOverlay contentId={video.id} slug={video.slug} title={video.title} />
         </>
       )}
     </div>

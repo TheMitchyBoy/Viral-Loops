@@ -1,153 +1,146 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
-import { REWARD_TIERS, LEADERBOARD, getRewardTier, getNextTier } from "@/lib/data";
-import { getAllBadges } from "@/lib/viral-engine";
-import { Share2, Trophy, Gift, Flame, Copy, Check, Users, Star } from "lucide-react";
-import { useState } from "react";
+import { MEMBER_PERKS, NEWS_ITEMS, getFollowerPerk, getLockedContentCount, FACEBOOK_PAGE_URL } from "@/lib/data";
+import { getAllBadges, openFacebookPage } from "@/lib/viral-engine";
+import { Facebook, Check, Lock, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 export default function RewardsPage() {
-  const { profile } = useUser();
-  const [copied, setCopied] = useState(false);
-  const currentTier = getRewardTier(profile.points);
-  const nextTier = getNextTier(profile.points);
+  const { profile, setFollowTarget, setShowFollowModal } = useUser();
+  const currentPerk = getFollowerPerk(profile.followedFacebook);
   const allBadges = getAllBadges();
+  const lockedCount = getLockedContentCount();
+  const exclusiveItems = NEWS_ITEMS.filter((n) => n.tier !== "free");
 
-  const copyReferral = () => {
-    const url = `${window.location.origin}?ref=${profile.referralCode}`;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const openFollowModal = () => {
+    setFollowTarget({ id: "follow", slug: "", title: "Riverside Daily Exclusive Content" });
+    setShowFollowModal(true);
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-stone-900 mb-2">Your Rewards</h1>
+      <h1 className="text-3xl font-bold text-stone-900 mb-2">Exclusive Access</h1>
       <p className="text-stone-500 mb-8">
-        Share local news, earn points, and unlock exclusive content for Riverside.
+        Follow Riverside Daily on Facebook to unlock exclusive local news content.
       </p>
 
-      {/* Points overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-stone-200 p-5 text-center">
-          <Gift className="w-6 h-6 text-brand-600 mx-auto mb-2" />
-          <div className="text-3xl font-bold text-stone-900">{profile.points.toLocaleString()}</div>
-          <div className="text-sm text-stone-500">Total Points</div>
-        </div>
-        <div className="bg-white rounded-xl border border-stone-200 p-5 text-center">
-          <Share2 className="w-6 h-6 text-brand-600 mx-auto mb-2" />
-          <div className="text-3xl font-bold text-stone-900">{profile.totalShares}</div>
-          <div className="text-sm text-stone-500">Stories Shared</div>
-        </div>
-        <div className="bg-white rounded-xl border border-stone-200 p-5 text-center">
-          <Flame className="w-6 h-6 text-orange-500 mx-auto mb-2" />
-          <div className="text-3xl font-bold text-stone-900">{profile.shareStreak}</div>
-          <div className="text-sm text-stone-500">Day Streak</div>
-        </div>
-      </div>
-
-      {/* Current tier */}
       <section className="bg-white rounded-xl border border-stone-200 p-6 mb-8">
         <div className="flex items-center gap-4 mb-4">
-          <span className="text-4xl">{currentTier.badge}</span>
+          <span className="text-4xl">{currentPerk.badge}</span>
           <div>
-            <h2 className="text-xl font-bold text-stone-900">{currentTier.name} Tier</h2>
-            <p className="text-sm text-stone-500">{currentTier.perks.join(" · ")}</p>
+            <h2 className="text-xl font-bold text-stone-900">
+              {profile.followedFacebook ? "Facebook Follower" : "Reader"}
+            </h2>
+            <p className="text-sm text-stone-500">{currentPerk.perks.join(" · ")}</p>
           </div>
         </div>
 
-        {nextTier && (
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-stone-500">Progress to {nextTier.name}</span>
-              <span className="font-semibold text-stone-900">
-                {profile.points} / {nextTier.minPoints}
-              </span>
-            </div>
-            <div className="w-full bg-stone-100 rounded-full h-3">
-              <div
-                className="bg-brand-500 h-3 rounded-full transition-all duration-500"
-                style={{
-                  width: `${Math.min(100, (profile.points / nextTier.minPoints) * 100)}%`,
-                }}
-              />
-            </div>
+        {profile.followedFacebook ? (
+          <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 rounded-lg p-4 text-sm">
+            <Check className="w-5 h-5 flex-shrink-0" />
+            <span>
+              You&apos;re following Riverside Daily on Facebook. All {lockedCount} exclusive stories are unlocked.
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-stone-600">
+              Follow us on Facebook to instantly unlock {lockedCount} exclusive stories, videos, and bonus content.
+            </p>
+            <button
+              onClick={openFollowModal}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1877F2] text-white font-semibold px-6 py-3 rounded-xl hover:bg-[#166FE5] transition-colors"
+            >
+              <Facebook className="w-5 h-5" />
+              Follow on Facebook to Unlock
+            </button>
           </div>
         )}
       </section>
 
-      {/* Referral */}
-      <section className="bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl p-6 text-white mb-8">
-        <div className="flex items-center gap-2 mb-3">
-          <Users className="w-5 h-5" />
-          <h2 className="text-xl font-bold">Invite Your Neighbors</h2>
-        </div>
-        <p className="text-brand-100 text-sm mb-4">
-          Share your referral link and earn <strong>50 points</strong> for every new reader who joins.
-        </p>
-        <div className="flex items-center gap-2 bg-white/10 rounded-xl p-3">
-          <code className="flex-1 text-sm truncate">{profile.referralCode}</code>
-          <button
-            onClick={copyReferral}
-            className="flex items-center gap-1 bg-white text-brand-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-brand-50 transition-colors"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" /> Copied
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" /> Copy Link
-              </>
-            )}
-          </button>
-        </div>
-        <p className="text-xs text-brand-200 mt-2">
-          {profile.totalReferrals} referral{profile.totalReferrals !== 1 ? "s" : ""} so far
-        </p>
-      </section>
-
-      {/* Reward tiers */}
-      <section className="mb-8">
-        <h2 className="text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
-          <Star className="w-5 h-5 text-amber-500" /> Reward Tiers
-        </h2>
+      <section id="perks" className="mb-8">
+        <h2 className="text-xl font-bold text-stone-900 mb-4">What You Unlock</h2>
         <div className="grid gap-3">
-          {REWARD_TIERS.map((tier) => {
-            const isCurrent = tier.id === currentTier.id;
-            const isPast = profile.points >= tier.minPoints;
+          {MEMBER_PERKS.map((perk) => {
+            const isActive =
+              perk.id === "reader" ||
+              (perk.id === "follower" && profile.followedFacebook) ||
+              (perk.id === "insider" && profile.followedFacebook);
             return (
               <div
-                key={tier.id}
+                key={perk.id}
                 className={`rounded-xl border p-4 flex items-center gap-4 transition-colors ${
-                  isCurrent
-                    ? "border-brand-300 bg-brand-50"
-                    : isPast
-                      ? "border-emerald-200 bg-emerald-50"
-                      : "border-stone-200 bg-white"
+                  isActive ? "border-blue-200 bg-blue-50" : "border-stone-200 bg-white opacity-60"
                 }`}
               >
-                <span className="text-2xl">{tier.badge}</span>
+                <span className="text-2xl">{perk.badge}</span>
                 <div className="flex-1">
-                  <div className="font-semibold text-stone-900">
-                    {tier.name}
-                    {isCurrent && (
-                      <span className="ml-2 text-xs bg-brand-600 text-white px-2 py-0.5 rounded-full">
-                        Current
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-stone-500">{tier.minPoints.toLocaleString()}+ points</div>
-                  <div className="text-sm text-stone-600 mt-0.5">{tier.perks.join(" · ")}</div>
+                  <div className="font-semibold text-stone-900">{perk.name}</div>
+                  <div className="text-sm text-stone-600 mt-0.5">{perk.perks.join(" · ")}</div>
                 </div>
+                {isActive && <Check className="w-5 h-5 text-emerald-600" />}
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* Badges */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold text-stone-900 mb-4">Exclusive Content</h2>
+        <div className="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100">
+          {exclusiveItems.map((item) => {
+            const unlocked = profile.followedFacebook;
+            const href = item.type === "video" ? `/video/${item.slug}` : `/article/${item.slug}`;
+            return (
+              <Link
+                key={item.id}
+                href={href}
+                className="flex items-center gap-3 p-4 hover:bg-stone-50 transition-colors"
+              >
+                {unlocked ? (
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                ) : (
+                  <Lock className="w-4 h-4 text-stone-400 flex-shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-stone-900 truncate">{item.title}</div>
+                  <div className="text-xs text-stone-500">{item.category} · {item.type}</div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-r from-[#1877F2] to-blue-700 rounded-xl p-6 text-white mb-8">
+        <div className="flex items-center gap-2 mb-3">
+          <Facebook className="w-5 h-5" />
+          <h2 className="text-xl font-bold">Follow on Facebook</h2>
+        </div>
+        <p className="text-blue-100 text-sm mb-4">
+          Join thousands of Riverside residents who follow us for breaking news, exclusive investigations, and community updates.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => openFacebookPage()}
+            className="flex items-center justify-center gap-2 bg-white text-blue-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-blue-50 transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Open Facebook Page
+          </button>
+          {!profile.followedFacebook && (
+            <button
+              onClick={openFollowModal}
+              className="flex items-center justify-center gap-2 border border-white/30 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors"
+            >
+              Confirm Follow & Unlock
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-blue-200 mt-3">{FACEBOOK_PAGE_URL.replace("https://www.", "")}</p>
+      </section>
+
       <section id="badges" className="mb-8">
         <h2 className="text-xl font-bold text-stone-900 mb-4">Badges</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -169,51 +162,15 @@ export default function RewardsPage() {
         </div>
       </section>
 
-      {/* Leaderboard */}
-      <section id="leaderboard" className="mb-8">
-        <h2 className="text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-amber-500" /> Community Leaderboard
-        </h2>
-        <div className="bg-white rounded-xl border border-stone-200 overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-stone-100 text-left text-xs text-stone-500 uppercase tracking-wider">
-                <th className="p-4">Rank</th>
-                <th className="p-4">Member</th>
-                <th className="p-4 text-right">Points</th>
-                <th className="p-4 text-right hidden sm:table-cell">Shares</th>
-              </tr>
-            </thead>
-            <tbody>
-              {LEADERBOARD.map((entry) => (
-                <tr key={entry.rank} className="border-b border-stone-50 last:border-0">
-                  <td className="p-4 font-bold text-stone-400">{entry.rank}</td>
-                  <td className="p-4">
-                    <span className="mr-2">{entry.badge}</span>
-                    <span className="font-semibold text-stone-900">{entry.name}</span>
-                  </td>
-                  <td className="p-4 text-right font-semibold text-stone-900">
-                    {entry.points.toLocaleString()}
-                  </td>
-                  <td className="p-4 text-right text-stone-500 hidden sm:table-cell">{entry.shares}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* CTA */}
       <div className="text-center bg-stone-100 rounded-xl p-8">
-        <h3 className="text-lg font-bold text-stone-900 mb-2">Ready to earn more?</h3>
+        <h3 className="text-lg font-bold text-stone-900 mb-2">Ready to read more?</h3>
         <p className="text-stone-500 text-sm mb-4">
-          Head back to the latest stories and start sharing to climb the leaderboard.
+          Browse the latest Riverside stories — free articles are always open, exclusives unlock with one Facebook follow.
         </p>
         <Link
           href="/"
           className="inline-flex items-center gap-2 bg-brand-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-brand-700 transition-colors"
         >
-          <Share2 className="w-4 h-4" />
           Browse Latest News
         </Link>
       </div>

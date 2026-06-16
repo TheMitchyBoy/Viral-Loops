@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Share2, Mail } from "lucide-react";
+import { Facebook } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
               <span className="text-white font-bold text-lg">Riverside Daily</span>
             </div>
             <p className="text-sm leading-relaxed">
-              Your trusted source for Riverside local news. Share stories, earn rewards, and unlock exclusive community content.
+              Your trusted source for Riverside local news. Follow us on Facebook to unlock exclusive investigations and bonus content.
             </p>
           </div>
 
@@ -32,28 +32,25 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Rewards Program</h3>
+            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Exclusive Access</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/rewards" className="hover:text-white transition-colors">How It Works</Link></li>
-              <li><Link href="/rewards#leaderboard" className="hover:text-white transition-colors">Leaderboard</Link></li>
+              <li><Link href="/rewards#perks" className="hover:text-white transition-colors">What You Unlock</Link></li>
               <li><Link href="/rewards#badges" className="hover:text-white transition-colors">Badges</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Share & Grow</h3>
+            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Follow Us</h3>
             <p className="text-sm mb-3">
-              Help us grow Riverside&apos;s most informed community. Every share earns you points and unlocks bonus content.
+              Follow Riverside Daily on Facebook for breaking news alerts and exclusive local content.
             </p>
-            <div className="flex gap-2">
-              <Share2 className="w-5 h-5 text-brand-400" />
-              <Mail className="w-5 h-5 text-brand-400" />
-            </div>
+            <Facebook className="w-5 h-5 text-blue-400" />
           </div>
         </div>
 
         <div className="border-t border-stone-800 mt-8 pt-8 text-xs text-center">
-          © 2026 Riverside Daily. Built with viral loop technology to keep our community informed.
+          © 2026 Riverside Daily. Follow on Facebook to unlock exclusive local news content.
         </div>
       </div>
     </footer>

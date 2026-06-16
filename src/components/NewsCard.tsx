@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/lib/types";
 import { formatDate, formatNumber, cn } from "@/lib/utils";
-import { Clock, Play, Lock, Share2, Eye } from "lucide-react";
+import { Clock, Play, Lock, Facebook, Eye } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
 interface NewsCardProps {
@@ -13,14 +13,14 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
-  const { checkUnlocked, setShareTarget, setShowShareModal } = useUser();
-  const unlocked = checkUnlocked(item.id, item.tier, item.unlockRequirement);
+  const { checkUnlocked, setFollowTarget, setShowFollowModal } = useUser();
+  const unlocked = checkUnlocked(item.tier);
   const href = item.type === "video" ? `/video/${item.slug}` : `/article/${item.slug}`;
 
   const tierBadge = {
     free: { label: "Free", class: "tier-free" },
-    "share-unlock": { label: "Share to Unlock", class: "tier-share" },
-    premium: { label: "Insider", class: "tier-premium" },
+    "follow-unlock": { label: "Follow to Unlock", class: "tier-follow" },
+    premium: { label: "Exclusive", class: "tier-follow" },
   }[item.tier];
 
   if (variant === "featured") {
@@ -54,7 +54,7 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
             <span>{item.author}</span>
             <span>{formatDate(item.publishedAt)}</span>
             <span className="flex items-center gap-1">
-              <Share2 className="w-3 h-3" /> {formatNumber(item.shareCount)}
+              <Eye className="w-3 h-3" /> {formatNumber(item.viewCount)}
             </span>
           </div>
         </div>
@@ -72,6 +72,11 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
               <Play className="w-5 h-5 text-white fill-white" />
             </div>
           )}
+          {item.tier !== "free" && !unlocked && (
+            <div className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5">
+              <Lock className="w-3 h-3 text-white" />
+            </div>
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-sm text-stone-900 group-hover:text-brand-600 transition-colors line-clamp-2">
@@ -79,8 +84,12 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
           </h3>
           <div className="flex items-center gap-2 mt-1 text-xs text-stone-500">
             <span>{timeAgo(item.publishedAt)}</span>
-            <span>·</span>
-            <span className="text-brand-600 font-medium">+{item.shareReward} pts</span>
+            {item.tier !== "free" && !unlocked && (
+              <>
+                <span>·</span>
+                <span className="text-blue-600 font-medium">Follow to unlock</span>
+              </>
+            )}
           </div>
         </div>
       </Link>
@@ -106,7 +115,7 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
           )}
           {item.tier !== "free" && !unlocked && (
             <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-              <Lock className="w-3 h-3" /> Locked
+              <Lock className="w-3 h-3" /> Follow to unlock
             </div>
           )}
         </div>
@@ -114,9 +123,11 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
       <div className="p-4">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-brand-600">{item.category}</span>
-          <span className={cn("text-[10px] font-semibold px-1.5 py-0.5 rounded", tierBadge.class)}>
-            {tierBadge.label}
-          </span>
+          {item.tier !== "free" && (
+            <span className={cn("text-[10px] font-semibold px-1.5 py-0.5 rounded", tierBadge.class)}>
+              {tierBadge.label}
+            </span>
+          )}
         </div>
         <Link href={href}>
           <h3 className="font-bold text-stone-900 group-hover:text-brand-600 transition-colors line-clamp-2 mb-2">
@@ -140,16 +151,18 @@ export default function NewsCard({ item, variant = "default" }: NewsCardProps) {
               <Eye className="w-3 h-3" /> {formatNumber(item.viewCount)}
             </span>
           </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setShareTarget({ id: item.id, slug: item.slug, title: item.title, reward: item.shareReward });
-              setShowShareModal(true);
-            }}
-            className="flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 bg-brand-50 px-2 py-1 rounded-full hover:bg-brand-100 transition-colors"
-          >
-            <Share2 className="w-3 h-3" /> +{item.shareReward}
-          </button>
+          {item.tier !== "free" && !unlocked && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setFollowTarget({ id: item.id, slug: item.slug, title: item.title });
+                setShowFollowModal(true);
+              }}
+              className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-2 py-1 rounded-full hover:bg-blue-100 transition-colors"
+            >
+              <Facebook className="w-3 h-3" /> Follow
+            </button>
+          )}
         </div>
       </div>
     </article>

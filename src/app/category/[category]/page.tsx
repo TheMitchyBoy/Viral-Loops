@@ -29,7 +29,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
       <h1 className="text-3xl font-bold text-stone-900 mb-2">{normalizedCategory}</h1>
       <p className="text-stone-500 mb-8">
-        {items.length} {items.length === 1 ? "story" : "stories"} · Share any story to earn reward points
+        {items.length} {items.length === 1 ? "story" : "stories"} · Follow on Facebook to unlock exclusive content
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

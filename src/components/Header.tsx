@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { getRewardTier } from "@/lib/data";
-import { Trophy, Share2, Menu, X } from "lucide-react";
+import { getFollowerPerk } from "@/lib/data";
+import { Facebook, Menu, X, Check } from "lucide-react";
 import { useState } from "react";
 
 export default function Header() {
-  const { profile } = useUser();
-  const tier = getRewardTier(profile.points);
+  const { profile, setFollowTarget, setShowFollowModal } = useUser();
+  const perk = getFollowerPerk(profile.followedFacebook);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
@@ -16,7 +16,7 @@ export default function Header() {
     { href: "/category/politics", label: "Politics" },
     { href: "/category/sports", label: "Sports" },
     { href: "/category/community", label: "Community" },
-    { href: "/rewards", label: "Rewards" },
+    { href: "/rewards", label: "Access" },
   ];
 
   return (
@@ -24,12 +24,19 @@ export default function Header() {
       <div className="bg-brand-600 text-white text-xs py-1.5">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <span className="hidden sm:inline">
-            Share local stories, earn rewards & unlock exclusive content
+            Follow on Facebook to unlock exclusive local news & bonus content
           </span>
-          <span className="sm:hidden">Share & earn rewards</span>
+          <span className="sm:hidden">Follow to unlock exclusives</span>
           <Link href="/rewards" className="flex items-center gap-1 hover:underline font-medium">
-            <Trophy className="w-3 h-3" />
-            {profile.points} pts · {tier.badge} {tier.name}
+            {profile.followedFacebook ? (
+              <>
+                <Check className="w-3 h-3" /> {perk.badge} {perk.name}
+              </>
+            ) : (
+              <>
+                <Facebook className="w-3 h-3" /> Follow to unlock
+              </>
+            )}
           </Link>
         </div>
       </div>
@@ -59,13 +66,18 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/rewards"
-              className="hidden sm:flex items-center gap-2 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-              Share & Earn
-            </Link>
+            {!profile.followedFacebook && (
+              <button
+                onClick={() => {
+                  setFollowTarget({ id: "follow", slug: "", title: "Riverside Daily Exclusive Content" });
+                  setShowFollowModal(true);
+                }}
+                className="hidden sm:flex items-center gap-2 bg-[#1877F2] text-white px-3 py-1.5 rounded-full text-sm font-medium hover:bg-[#166FE5] transition-colors"
+              >
+                <Facebook className="w-4 h-4" />
+                Follow to Unlock
+              </button>
+            )}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 text-stone-600"
