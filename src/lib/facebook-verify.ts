@@ -3,6 +3,7 @@ import {
   FACEBOOK_PAGE_ID,
   isFacebookConfigured,
 } from "./facebook-config";
+import { SITE_NAME } from "./brand";
 
 const GRAPH_VERSION = "v21.0";
 
@@ -113,7 +114,7 @@ export async function verifyFacebookPageFollow(
         userId,
         name,
         error:
-          "We couldn't verify that you follow our Facebook page. Please like or follow Riverside Daily on Facebook, then try again.",
+          `We couldn't verify that you follow our Facebook page. Please like or follow ${SITE_NAME} on Facebook, then try again.`,
       };
     }
 

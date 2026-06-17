@@ -19,7 +19,7 @@ export default function AlumniLeaderboard() {
         <h2 className="font-display font-bold text-lg">Alumni Pride Loop</h2>
       </div>
       <p className="text-sm text-zinc-500 mb-4">
-        Riverside High classes compete to unlock full championship coverage. Pick your class!
+        Riverside High alumni compete to unlock full school budget coverage. Pick your class!
       </p>
 
       <select

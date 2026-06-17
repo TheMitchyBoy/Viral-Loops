@@ -1,5 +1,6 @@
 "use client";
 
+import { SITE_NAME } from "@/lib/brand";
 import { Facebook } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
@@ -16,7 +17,7 @@ export default function FollowPrompt({ contentId, slug, title }: FollowPromptPro
     return (
       <div className="card p-5 my-8 border-cyan-400/20 bg-cyan-400/5">
         <p className="text-sm text-cyan-200/90">
-          <strong className="text-cyan-300">Verified follower</strong> — you have full access to exclusive Riverside Daily content.
+          <strong className="text-cyan-300">Verified follower</strong> — you have full access to exclusive {SITE_NAME} content.
         </p>
       </div>
     );

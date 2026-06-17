@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { openFacebookPage } from "@/lib/viral-engine";
+import { SITE_NAME } from "@/lib/brand";
 import { FACEBOOK_PAGE_URL } from "@/lib/facebook-config";
 import { useFacebookSDK } from "@/lib/facebook-client";
 import { Facebook, X, Check, Lock, ExternalLink, AlertCircle, Loader2 } from "lucide-react";
@@ -97,7 +98,7 @@ export default function FollowModal() {
                 <p className="text-sm text-zinc-300 line-clamp-2">{followTarget.title}</p>
               </div>
               <p className="text-xs text-zinc-500">
-                Follow Riverside Daily on Facebook, then verify with login to unlock.
+                Follow {SITE_NAME} on Facebook, then verify with login to unlock.
               </p>
             </div>
 

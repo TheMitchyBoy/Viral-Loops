@@ -1,6 +1,6 @@
-# Riverside Daily — Local News with 12 Viral Loops
+# Mitchel Turner — Local News with 12 Viral Loops
 
-A local news website that uses **12 viral loop mechanics** plus verified Facebook follow gates to grow readership and unlock exclusive content.
+Independent local news from **Mitchel Turner** covering politics, investigations, community, education, food, and events in Riverside — with **12 viral loop mechanics** and verified Facebook follow gates to grow readership and unlock exclusive content.
 
 ## Viral Loops
 
@@ -14,7 +14,7 @@ A local news website that uses **12 viral loop mechanics** plus verified Faceboo
 | 6 | **Flash Scarcity Drops** | Limited spots for exclusive PDFs/assets |
 | 7 | **Community-Powered Release** | 500 verified followers releases the full report |
 | 8 | **Local Business Loop** | Check in at partners (codes: `KIM2026`, `EMBER26`) for perks |
-| 9 | **Alumni Pride** | Riverside High classes compete on follower counts |
+| 9 | **Alumni Pride** | Riverside High alumni cohorts unlock school budget coverage |
 | 10 | **Community Roles** | Scout → Witness → Advocate → Insider progression |
 | 11 | **Mystery Serial** | Daily clues + bonus intel for referrers |
 | 12 | **Accountability Receipts** | Shareable proof you read the full story |
@@ -39,7 +39,7 @@ Exclusive content requires a **verified Facebook follow** via Login + Graph API.
 
 - `/loops` — All 12 viral loop UIs in one hub
 - `/article/hidden-contamination-river-investigation` — Question unlock, live vote, story credits, receipts
-- `?ref=RD-XXXXXX` — Referral links for story credit chain
+- `?ref=MT-XXXXXX` — Referral links for story credit chain
 
 ## Tech Stack
 

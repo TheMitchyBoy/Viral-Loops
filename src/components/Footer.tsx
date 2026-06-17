@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Facebook, Sparkles } from "lucide-react";
+import { SITE_NAME, SITE_TAGLINE } from "@/lib/brand";
 
 export default function Footer() {
   return (
@@ -10,19 +11,19 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center">
-                <span className="font-display font-bold text-zinc-950">R</span>
+                <span className="font-display font-bold text-zinc-950">M</span>
               </div>
-              <span className="font-display font-bold text-lg">Riverside Daily</span>
+              <span className="font-display font-bold text-lg">{SITE_NAME}</span>
             </div>
             <p className="text-sm text-zinc-500 leading-relaxed">
-              Next-generation local journalism. Community-powered viral loops. Verified exclusive access.
+              {SITE_TAGLINE}. Community-powered viral loops. Verified exclusive access.
             </p>
           </div>
 
           <div>
             <h3 className="label-caps mb-4">Sections</h3>
             <ul className="space-y-2.5 text-sm">
-              {["Politics", "Sports", "Community", "Education", "Investigation"].map((cat) => (
+              {["Politics", "Investigation", "Community", "Education", "Food", "Events"].map((cat) => (
                 <li key={cat}>
                   <Link href={`/category/${cat.toLowerCase()}`} className="text-zinc-500 hover:text-cyan-300 transition-colors">
                     {cat}
@@ -52,7 +53,7 @@ export default function Footer() {
 
         <div className="glow-line my-10" />
         <p className="text-xs text-zinc-600 text-center">
-          © 2026 Riverside Daily · Designed for the community
+          © 2026 {SITE_NAME} · Designed for the community
         </p>
       </div>
     </footer>

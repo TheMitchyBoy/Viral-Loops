@@ -10,9 +10,9 @@ import {
   getZoneByZip,
 } from "./data";
 
-const COMMUNITY_KEY = "riverside-community";
+const COMMUNITY_KEY = "mitchel-turner-community";
 const DEFAULT_COMMUNITY: CommunityState = {
-  zoneFollowers: { "oak-street": 11, "creek-view": 7, "riverside-high": 16, "maple-row": 9, "central-park": 5 },
+  zoneFollowers: { "oak-street": 11, "creek-view": 7, "school-district": 16, "maple-row": 9, "central-park": 5 },
   globalVerifiedFollows: 347,
   questions: [],
   pollVotes: { "poll-contamination": { publish: 89, redact: 42, wait: 31 } },
@@ -20,7 +20,7 @@ const DEFAULT_COMMUNITY: CommunityState = {
   storyCredits: [
     { userId: "demo1", name: "Maria G.", storyId: "3", readersReached: 47 },
     { userId: "demo2", name: "David K.", storyId: "3", readersReached: 31 },
-    { userId: "demo3", name: "Jennifer L.", storyId: "2", readersReached: 28 },
+    { userId: "demo3", name: "Jennifer L.", storyId: "7", readersReached: 28 },
   ],
   alumniCounts: { "2003": 34, "2008": 52, "2015": 41, "2026": 67 },
   referralCounts: {},
@@ -28,7 +28,7 @@ const DEFAULT_COMMUNITY: CommunityState = {
 
 function generateReferralCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "RD-";
+  let code = "MT-";
   for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
 }
@@ -97,7 +97,7 @@ export function mergeProfileWithViral(profile: UserProfile): UserProfile & { vir
 export function saveViralProfile(profile: UserProfile, viral: ViralProfile): UserProfile {
   const merged = { ...profile, viral };
   if (typeof window !== "undefined") {
-    localStorage.setItem("riverside-daily-user", JSON.stringify(merged));
+    localStorage.setItem("mitchel-turner-user", JSON.stringify(merged));
   }
   return merged;
 }

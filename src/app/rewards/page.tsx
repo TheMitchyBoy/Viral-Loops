@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
-import { MEMBER_PERKS, NEWS_ITEMS, getFollowerPerk, getLockedContentCount, FACEBOOK_PAGE_URL } from "@/lib/data";
+import { MEMBER_PERKS, NEWS_ITEMS, getFollowerPerk, getLockedContentCount, FACEBOOK_PAGE_URL, SITE_NAME, CITY_NAME } from "@/lib/data";
 import { getAllBadges, openFacebookPage } from "@/lib/viral-engine";
 import { Facebook, Check, Lock, ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default function RewardsPage() {
   const exclusiveItems = NEWS_ITEMS.filter((n) => n.tier !== "free");
 
   const openFollowModal = () => {
-    setFollowTarget({ id: "follow", slug: "", title: "Riverside Daily Exclusive Content" });
+    setFollowTarget({ id: "follow", slug: "", title: `${SITE_NAME} Exclusive Content` });
     setShowFollowModal(true);
   };
 
@@ -24,7 +24,7 @@ export default function RewardsPage() {
       <p className="label-caps text-cyan-400/70 mb-2">Membership</p>
       <h1 className="font-display text-3xl md:text-4xl font-bold mb-2 tracking-tight">Exclusive Access</h1>
       <p className="text-zinc-500 mb-8">
-        Follow Riverside Daily on Facebook and verify with Facebook login to unlock exclusive content.
+        Follow {SITE_NAME} on Facebook and verify with Facebook login to unlock exclusive content.
       </p>
 
       <section className="card p-6 mb-8">
@@ -170,7 +170,7 @@ export default function RewardsPage() {
       <div className="text-center card p-8">
         <h3 className="font-display text-lg font-bold mb-2">Ready to read more?</h3>
         <p className="text-zinc-500 text-sm mb-4">
-          Browse the latest Riverside stories — free articles are always open, exclusives require a verified Facebook follow.
+          Browse the latest {CITY_NAME} stories — free articles are always open, exclusives require a verified Facebook follow.
         </p>
         <Link href="/" className="btn-primary">
           Browse Latest News

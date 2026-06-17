@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { getViral } from "@/lib/viral-engine";
+import { SITE_NAME, CITY_NAME } from "@/lib/brand";
 import { FileCheck, Share2, Copy, Check } from "lucide-react";
 
 interface InformedReceiptProps {
@@ -19,7 +20,7 @@ export default function InformedReceipt({ storyId, storyTitle }: InformedReceipt
 
   if (!verified) return null;
 
-  const receiptText = `I'm an informed Riverside resident. I read the full report: "${storyTitle}" — ask me what officials aren't saying. Verified via Riverside Daily · ${new Date().toLocaleDateString()}`;
+  const receiptText = `I'm an informed ${CITY_NAME} resident. I read the full report: "${storyTitle}" — ask me what officials aren't saying. Verified via ${SITE_NAME} · ${new Date().toLocaleDateString()}`;
 
   const generate = () => {
     createReceipt(storyId, storyTitle);
@@ -47,7 +48,7 @@ export default function InformedReceipt({ storyId, storyTitle }: InformedReceipt
         <div className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-2">Informed Citizen</div>
         <p className="text-sm text-zinc-200 font-medium mb-1">{profile.facebookName ?? profile.name}</p>
         <p className="text-xs text-zinc-500 line-clamp-2">{storyTitle}</p>
-        <p className="text-[10px] text-zinc-600 mt-2">Riverside Daily · Verified Reader</p>
+        <p className="text-[10px] text-zinc-600 mt-2">{SITE_NAME} · Verified Reader</p>
       </div>
 
       <div className="flex gap-2">

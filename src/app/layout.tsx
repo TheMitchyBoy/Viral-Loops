@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_NAME, CITY_NAME } from "@/lib/brand";
 import { Syne, DM_Sans, Instrument_Serif } from "next/font/google";
 import { UserProvider } from "@/context/UserContext";
 import Header from "@/components/Header";
@@ -27,9 +28,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Riverside Daily — Local News Reimagined",
+  title: `${SITE_NAME} — ${CITY_NAME} Local News`,
   description:
-    "Ultra-modern local news for Riverside. Follow on Facebook to unlock exclusive investigations, viral community loops, and insider content.",
+    `Independent local news from ${SITE_NAME} in ${CITY_NAME}. Follow on Facebook to unlock exclusive investigations, viral community loops, and insider content.`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

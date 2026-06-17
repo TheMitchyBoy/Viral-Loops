@@ -9,15 +9,17 @@ import {
   loadCommunity,
 } from "./viral/engine";
 
-const STORAGE_KEY = "riverside-daily-user";
+import { SITE_NAME } from "./brand";
+
+const STORAGE_KEY = "mitchel-turner-user";
 
 export { FACEBOOK_PAGE_URL };
 
 const BADGES: Badge[] = [
-  { id: "facebook-follower", name: "Facebook Follower", description: "Verified follower of Riverside Daily on Facebook", icon: "👍" },
+  { id: "facebook-follower", name: "Facebook Follower", description: `Verified follower of ${SITE_NAME} on Facebook`, icon: "👍" },
   { id: "investigator", name: "Investigator", description: "Unlocked an exclusive investigation", icon: "🔍" },
   { id: "insider", name: "Insider", description: "Unlocked all exclusive content", icon: "💎" },
-  { id: "community-member", name: "Community Member", description: "Joined the Riverside Daily community", icon: "🏘️" },
+  { id: "community-member", name: "Community Member", description: `Joined the ${SITE_NAME} community`, icon: "🏘️" },
   { id: "scout", name: "Scout", icon: "🔭", description: "Submitted a local question that shaped coverage" },
   { id: "witness", name: "Witness", icon: "📸", description: "Checked in at a partner business" },
   { id: "advocate", name: "Advocate", icon: "📣", description: "Recruited 3+ verified followers" },

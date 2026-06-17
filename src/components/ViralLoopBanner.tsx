@@ -2,6 +2,7 @@
 
 import { BookOpen, Facebook, Unlock, TrendingUp, MapPin, Vote, Mic, Zap, Target, Store, GraduationCap, Shield, Search, FileCheck } from "lucide-react";
 import Link from "next/link";
+import { CITY_NAME } from "@/lib/brand";
 
 const LOOPS = [
   { icon: MapPin, title: "Neighborhood Map", desc: "Zip thresholds unlock zone stories" },
@@ -12,7 +13,7 @@ const LOOPS = [
   { icon: Zap, title: "Flash Drops", desc: "Limited exclusive assets" },
   { icon: Target, title: "Community Release", desc: "500 followers unlock report" },
   { icon: Store, title: "Business Loop", desc: "Local check-in perks" },
-  { icon: GraduationCap, title: "Alumni Pride", desc: "Class vs class competition" },
+  { icon: GraduationCap, title: "Alumni Pride", desc: "Class cohort unlock goals" },
   { icon: Shield, title: "Community Roles", desc: "Scout → Insider progression" },
   { icon: Search, title: "Mystery Serial", desc: "Daily clues + bonus intel" },
   { icon: FileCheck, title: "Receipts", desc: "Proof you read the full story" },
@@ -30,7 +31,7 @@ export default function ViralLoopBanner() {
             <span className="text-zinc-300">One Local Community</span>
           </h2>
           <p className="text-zinc-500 text-base md:text-lg leading-relaxed">
-            Neighborhood maps, live votes, mystery serials — engineered to turn Riverside readers into a growth network.
+            Neighborhood maps, live votes, mystery serials — engineered to turn {CITY_NAME} readers into a growth network.
           </p>
         </div>
 

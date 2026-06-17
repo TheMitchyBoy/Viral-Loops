@@ -9,6 +9,7 @@ import {
   RoleDefinition,
   MysterySerial,
 } from "./types";
+import { SITE_NAME } from "../brand";
 
 export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
   {
@@ -30,12 +31,12 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     color: "#059669",
   },
   {
-    id: "riverside-high",
-    name: "Riverside High Area",
+    id: "school-district",
+    name: "Unified School District",
     zipCodes: ["92504"],
     threshold: 20,
-    storyId: "2",
-    storyTitle: "State Championship Full Highlights",
+    storyId: "7",
+    storyTitle: "School Board Budget Crisis Coverage",
     color: "#2563eb",
   },
   {
@@ -78,11 +79,11 @@ export const AUDIO_DROPS: AudioDrop[] = [
   {
     id: "a1",
     title: "Reporter Voicemail: What We Couldn't Print",
-    description: "3-min voicemail from Sarah Chen on the downtown vote backroom deals",
+    description: "3-min voicemail from Mitchel Turner on the downtown vote backroom deals",
     duration: "3:12",
     voicemailNumber: "(951) 555-0142",
     transcript:
-      "Hey, it's Sarah. The council vote wasn't as clean as it looked. Three members met privately with developers the week before. We couldn't put names in print yet, but followers deserve to know we're still digging...",
+      "Hey, it's Mitchel. The council vote wasn't as clean as it looked. Three members met privately with developers the week before. We couldn't put names in print yet, but followers deserve to know we're still digging...",
   },
   {
     id: "a2",
@@ -95,12 +96,12 @@ export const AUDIO_DROPS: AudioDrop[] = [
   },
   {
     id: "a3",
-    title: "Locker Room Audio: Championship Night",
-    description: "Unfiltered coach speech after Riverside High's state win",
+    title: "School Board Voicemail: Cuts on the Table",
+    description: "Superintendent's after-hours message on what the parcel tax vote means for families",
     duration: "2:05",
     voicemailNumber: "(951) 555-0177",
     transcript:
-      "Coach Williams to the team: 'Twenty-three years. You did this for every Tiger who came before you.' Followers get the full uncut version...",
+      "This is Dr. Nguyen. If the parcel tax fails in November, we lose art and music first. Parents deserve to hear what's actually on the chopping block before the vote — full breakdown in the school board report...",
   },
 ];
 
@@ -141,14 +142,14 @@ export const BUSINESS_PARTNERS: BusinessPartner[] = [
 ];
 
 export const ALUMNI_CLASSES: AlumniClass[] = [
-  { year: "2003", label: "Class of 2003 — Last championship", storyId: "2" },
-  { year: "2008", label: "Class of 2008", storyId: "2" },
-  { year: "2015", label: "Class of 2015", storyId: "2" },
-  { year: "2026", label: "Class of 2026 — Current team", storyId: "2" },
+  { year: "2003", label: "Class of 2003", storyId: "7" },
+  { year: "2008", label: "Class of 2008", storyId: "7" },
+  { year: "2015", label: "Class of 2015", storyId: "7" },
+  { year: "2026", label: "Class of 2026", storyId: "7" },
 ];
 
 export const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "reader", name: "Reader", icon: "📖", description: "Free news consumer", requirement: "Join Riverside Daily" },
+  { id: "reader", name: "Reader", icon: "📖", description: "Free news consumer", requirement: `Join ${SITE_NAME}` },
   { id: "scout", name: "Scout", icon: "🔭", description: "Tips and questions that shape stories", requirement: "Submit 1 local question" },
   { id: "witness", name: "Witness", icon: "📸", description: "On-the-ground check-ins and tips", requirement: "Check in at a partner business" },
   { id: "advocate", name: "Advocate", icon: "📣", description: "Recruits verified followers", requirement: "Refer 3 verified followers" },

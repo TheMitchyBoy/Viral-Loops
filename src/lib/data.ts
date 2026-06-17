@@ -1,7 +1,6 @@
 import { NewsItem, BonusContent, RewardTier, CommunityMember } from "./types";
 
-export const CITY_NAME = "Riverside";
-export const SITE_NAME = `${CITY_NAME} Daily`;
+export { AUTHOR_NAME, SITE_NAME, CITY_NAME, SITE_TAGLINE } from "./brand";
 
 export { FACEBOOK_PAGE_URL } from "./viral-engine";
 
@@ -61,31 +60,13 @@ Construction is slated to begin in fall 2026, with the transit hub opening by 20
 
 Community input sessions on design details will continue through the summer. Residents can sign up for updates at riverside.gov/downtown.`,
     category: "Politics",
-    author: "Sarah Chen",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-15T08:00:00Z",
     readTime: 5,
     imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=675&fit=crop",
     tags: ["downtown", "development", "city council"],
     followerCount: 342,
     viewCount: 4821,
-  },
-  {
-    id: "2",
-    slug: "riverside-high-wins-state-championship",
-    type: "video",
-    tier: "free",
-    title: "Riverside High Storms Back to Win State Basketball Championship",
-    excerpt:
-      "Down 12 at halftime, the Riverside Tigers mounted an incredible comeback to defeat Westfield 68-65 in overtime, capturing their first state title in 23 years.",
-    category: "Sports",
-    author: "Marcus Williams",
-    publishedAt: "2026-06-14T22:30:00Z",
-    duration: 4,
-    imageUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&h=675&fit=crop",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    tags: ["sports", "basketball", "high school"],
-    followerCount: 891,
-    viewCount: 12400,
   },
   {
     id: "3",
@@ -95,7 +76,7 @@ Community input sessions on design details will continue through the summer. Res
     title: "EXCLUSIVE: Documents Reveal Hidden Contamination Near Riverside Creek",
     excerpt:
       "Our investigative team uncovered internal memos suggesting industrial runoff levels near Riverside Creek may exceed safe limits — and residents weren't told.",
-    body: `Preliminary findings from a six-month investigation by the Riverside Daily suggest that contamination levels in sediment samples taken from Riverside Creek near the old Meridian Industrial Park may exceed EPA safety thresholds for heavy metals.
+    body: `Preliminary findings from a six-month investigation by Mitchel Turner suggest that contamination levels in sediment samples taken from Riverside Creek near the old Meridian Industrial Park may exceed EPA safety thresholds for heavy metals.
 
 Internal documents obtained through public records requests show that county environmental officials were aware of elevated readings as early as March 2024, but no public advisory was issued.
 
@@ -113,7 +94,7 @@ Residents along Creek View Lane report they've noticed unusual odors and discolo
 
 The full investigation, including lab results and contamination maps, is available below for Facebook followers.`,
     category: "Investigation",
-    author: "Investigative Team",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-15T06:00:00Z",
     readTime: 8,
     imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=675&fit=crop",
@@ -137,7 +118,7 @@ Organizers announced Wednesday that the market, which has operated in Central Pa
 
 New vendors include a Vietnamese banh mi cart, a heritage grain bakery, and Riverside's first kombucha on tap. The market runs 8 a.m. to 1 p.m. every Saturday through October.`,
     category: "Community",
-    author: "Amy Rodriguez",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-14T14:00:00Z",
     readTime: 3,
     imageUrl: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1200&h=675&fit=crop",
@@ -154,7 +135,7 @@ New vendors include a Vietnamese banh mi cart, a heritage grain bakery, and Rive
     excerpt:
       "Miss the town hall? Watch the full 90-minute session plus 20 minutes of audience Q&A that wasn't broadcast live.",
     category: "Politics",
-    author: "Sarah Chen",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-13T20:00:00Z",
     duration: 110,
     imageUrl: "https://images.unsplash.com/photo-1475721027880-dc378b9a3148?w=1200&h=675&fit=crop",
@@ -180,7 +161,7 @@ New vendors include a Vietnamese banh mi cart, a heritage grain bakery, and Rive
 
 We spent a week with each chef team for exclusive previews. Full menus, chef interviews, and reservation links are included below for Facebook followers.`,
     category: "Food",
-    author: "Marcus Williams",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-15T10:00:00Z",
     readTime: 6,
     imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=675&fit=crop",
@@ -210,7 +191,7 @@ The parcel tax would add $98 per year to property tax bills and generate an esti
 
 Parents and teachers packed the board room, with many urging the board to prioritize student-facing programs. A community forum is scheduled for June 28.`,
     category: "Education",
-    author: "Sarah Chen",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-14T16:00:00Z",
     readTime: 4,
     imageUrl: "https://images.unsplash.com/photo-1580582932707-520aedcedb25?w=1200&h=675&fit=crop",
@@ -227,7 +208,7 @@ Parents and teachers packed the board room, with many urging the board to priori
     excerpt:
       "From the expanded farmers market to a free concert at Riverfront Park — your complete guide to the best of Riverside this weekend.",
     category: "Events",
-    author: "Amy Rodriguez",
+    author: "Mitchel Turner",
     publishedAt: "2026-06-15T07:00:00Z",
     duration: 6,
     imageUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&h=675&fit=crop",
@@ -254,14 +235,6 @@ export const BONUS_CONTENT: BonusContent[] = [
     description: "8-minute video interview with families living near the creek",
     type: "bonus-video",
     content: "Extended interview footage with the Martinez family, who've lived on Creek View Lane for 22 years...",
-  },
-  {
-    id: "b3",
-    parentId: "2",
-    title: "Championship Game: Full Highlights",
-    description: "Extended 12-minute highlight reel with coach and player interviews",
-    type: "bonus-video",
-    content: "Full game highlights including the overtime thriller, post-game celebration, and exclusive locker room interviews...",
   },
   {
     id: "b4",
