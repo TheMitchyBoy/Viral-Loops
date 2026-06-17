@@ -14,7 +14,7 @@ export default function Header() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/category/politics", label: "Politics" },
+    { href: "/category/politics", label: "Assembly" },
     { href: "/category/investigation", label: "Investigation" },
     { href: "/loops", label: "Loops" },
     { href: "/rewards", label: "Access" },

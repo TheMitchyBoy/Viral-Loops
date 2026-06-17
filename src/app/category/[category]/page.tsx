@@ -13,7 +13,8 @@ export async function generateStaticParams() {
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
-  const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+  const isPolitics = category.toLowerCase() === "politics";
+  const normalizedCategory = isPolitics ? "Borough Assembly" : category.charAt(0).toUpperCase() + category.slice(1);
   const items = await getNewsByCategory(category);
 
   if (items.length === 0) notFound();
@@ -27,10 +28,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
-      <p className="label-caps text-cyan-400/70 mb-2">Category</p>
+      <p className="label-caps text-cyan-400/70 mb-2">{isPolitics ? "Assembly Coverage" : "Category"}</p>
       <h1 className="font-display text-3xl md:text-4xl font-bold mb-2 tracking-tight">{normalizedCategory}</h1>
       <p className="text-zinc-500 mb-8">
-        {items.length} {items.length === 1 ? "story" : "stories"} · Follow on Facebook to unlock exclusive content
+        {items.length} {items.length === 1 ? "story" : "stories"}
+        {isPolitics ? " from Ketchikan Gateway Borough Assembly meeting minutes" : " · Follow on Facebook to unlock exclusive content"}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

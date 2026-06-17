@@ -1,25 +1,68 @@
-import { getFeaturedNews, getTrendingNews, getAllPosts, getCategories, getLockedContentCount } from "@/lib/posts";
+import { getFeaturedNews, getTrendingNews, getAssemblyPosts, getCuratedPosts, getCategories, getLockedContentCount } from "@/lib/posts";
 import NewsCard from "@/components/NewsCard";
 import ViralLoopBanner from "@/components/ViralLoopBanner";
-import { TrendingUp, Lock, Sparkles, Zap } from "lucide-react";
+import { TrendingUp, Lock, Sparkles, Zap, Landmark } from "lucide-react";
 import RecruitmentBar from "@/components/viral/RecruitmentBar";
 import Link from "next/link";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
+  const assemblyPosts = await getAssemblyPosts();
+  const curatedPosts = await getCuratedPosts();
   const featured = await getFeaturedNews();
   const trending = await getTrendingNews();
-  const newsItems = await getAllPosts();
   const categories = await getCategories();
   const lockedCount = await getLockedContentCount();
+
+  const hero = assemblyPosts[0] ?? featured[0];
+  const assemblyGrid = assemblyPosts.slice(hero?.id === assemblyPosts[0]?.id ? 1 : 0, 7);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 md:py-14">
       <div className="mb-8 md:mb-12">
-        <p className="label-caps text-cyan-400/70 mb-2">Top Story</p>
-        {featured[0] && <NewsCard item={featured[0]} variant="featured" />}
+        <p className="label-caps text-cyan-400/70 mb-2">
+          {assemblyPosts.length > 0 ? "Latest from Borough Assembly" : "Top Story"}
+        </p>
+        {hero && <NewsCard item={hero} variant="featured" />}
       </div>
+
+      {assemblyPosts.length > 0 && (
+        <section className="mb-12 md:mb-14">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Landmark className="w-4 h-4 text-cyan-400" />
+                <p className="label-caps">Live from Assembly-Scrape</p>
+              </div>
+              <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight">Borough Assembly Coverage</h2>
+              <p className="text-sm text-zinc-500 mt-1">
+                {assemblyPosts.length} meeting reports · sourced from KGB assembly minutes
+              </p>
+            </div>
+            <Link href="/category/politics" className="chip chip-active whitespace-nowrap">
+              View all assembly stories →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {assemblyGrid.map((item) => (
+              <NewsCard key={item.id} item={item} />
+            ))}
+          </div>
+
+          {assemblyPosts.length > 7 && (
+            <div className="mt-6 text-center">
+              <Link
+                href="/category/politics"
+                className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                See all {assemblyPosts.length} assembly articles →
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
 
       <ViralLoopBanner />
 
@@ -46,7 +89,7 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <p className="label-caps mb-1">Feed</p>
-              <h2 className="font-display text-3xl font-bold tracking-tight">Latest News</h2>
+              <h2 className="font-display text-3xl font-bold tracking-tight">More from Mitchel Turner</h2>
             </div>
             <div className="flex gap-2 flex-wrap">
               {categories.map((cat) => (
@@ -58,7 +101,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {newsItems.slice(1).map((item) => (
+            {curatedPosts.map((item) => (
               <NewsCard key={item.id} item={item} />
             ))}
           </div>
@@ -68,7 +111,9 @@ export default async function HomePage() {
           <div className="card p-5">
             <div className="flex items-center gap-2 mb-5">
               <TrendingUp className="w-4 h-4 text-cyan-400" />
-              <h3 className="font-display font-bold">Trending</h3>
+              <h3 className="font-display font-bold">
+                {assemblyPosts.length > 0 ? "Latest Assembly" : "Trending"}
+              </h3>
             </div>
             {trending.map((item) => (
               <NewsCard key={item.id} item={item} variant="compact" />
@@ -84,7 +129,7 @@ export default async function HomePage() {
               {lockedCount} stories locked behind verified Facebook follow.
             </p>
             <ul className="space-y-3 mb-5">
-              {newsItems
+              {curatedPosts
                 .filter((n) => n.tier !== "free")
                 .slice(0, 3)
                 .map((item) => (

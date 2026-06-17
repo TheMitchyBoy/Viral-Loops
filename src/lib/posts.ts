@@ -66,6 +66,20 @@ async function getMergedPosts(): Promise<NewsItem[]> {
   );
 }
 
+export function isAssemblyPost(item: NewsItem): boolean {
+  return item.id.startsWith("assembly-");
+}
+
+export async function getAssemblyPosts(): Promise<NewsItem[]> {
+  const posts = await getMergedPosts();
+  return posts.filter(isAssemblyPost);
+}
+
+export async function getCuratedPosts(): Promise<NewsItem[]> {
+  const posts = await getMergedPosts();
+  return posts.filter((p) => !isAssemblyPost(p));
+}
+
 export async function getAllPosts(): Promise<NewsItem[]> {
   return getMergedPosts();
 }
@@ -79,6 +93,9 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | undefined>
 }
 
 export async function getFeaturedNews(): Promise<NewsItem[]> {
+  const assembly = await getAssemblyPosts();
+  if (assembly.length > 0) return assembly.slice(0, 3);
+
   const prismaFeatured = await prisma.post.findMany({
     where: { featured: true },
     orderBy: { publishedAt: "desc" },
@@ -97,6 +114,9 @@ export async function getFeaturedNews(): Promise<NewsItem[]> {
 }
 
 export async function getTrendingNews(): Promise<NewsItem[]> {
+  const assembly = await getAssemblyPosts();
+  if (assembly.length > 0) return assembly.slice(0, 5);
+
   const posts = await getMergedPosts();
   return [...posts].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5);
 }
