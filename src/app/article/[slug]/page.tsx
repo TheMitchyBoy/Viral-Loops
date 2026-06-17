@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getNewsBySlug, getArticleSlugs, getBonusForContent } from "@/lib/posts";
 import ArticleClient from "./ArticleClient";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const slugs = await getArticleSlugs();
   return slugs.map((slug) => ({ slug }));

@@ -5,6 +5,8 @@ import { TrendingUp, Lock, Sparkles, Zap } from "lucide-react";
 import RecruitmentBar from "@/components/viral/RecruitmentBar";
 import Link from "next/link";
 
+export const revalidate = 60;
+
 export default async function HomePage() {
   const featured = await getFeaturedNews();
   const trending = await getTrendingNews();

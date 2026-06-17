@@ -35,7 +35,7 @@ npm run db:setup
 
 ### Assembly-Scrape integration
 
-Set `ASSEMBLY_DATABASE_URL` in `.env` to the Assembly-Scrape database (PostgreSQL on Railway or local SQLite). On `npm run dev` and `npm run build`, published assembly articles sync automatically — titles, slugs, summaries, and markdown body content from the `blog_posts` table.
+Set `ASSEMBLY_DATABASE_URL` in `.env` to the Assembly-Scrape database (PostgreSQL on Railway or local SQLite). The site **reads assembly articles at runtime** (refreshed every 60 seconds) and also syncs them into the local database during build/dev startup.
 
 Example titles include borough assembly coverage such as *Ketchikan Gateway Borough Assembly Approves Key Amendments and Funding in Special Meeting*. Without `ASSEMBLY_DATABASE_URL`, a sample assembly article is included in the seed for local development.
 

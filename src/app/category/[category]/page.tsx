@@ -4,6 +4,8 @@ import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const categories = await getCategories();
   return categories.map((category) => ({ category: category.toLowerCase() }));

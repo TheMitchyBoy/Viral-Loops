@@ -4,6 +4,7 @@ import { Post as DbPost, BonusContent as DbBonus } from "@prisma/client";
 import { prisma } from "./db";
 import { NewsItem, BonusContent, ContentTier, ContentType } from "./types";
 import { resolvePostImage } from "./placeholders";
+import { fetchAssemblyNewsBySlug, fetchAssemblyNewsItems } from "./assembly/fetch";
 
 function parseTags(raw: string): string[] {
   try {
@@ -47,67 +48,82 @@ function mapBonus(bonus: DbBonus): BonusContent {
   };
 }
 
-export async function getAllPosts(): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({
-    orderBy: { publishedAt: "desc" },
-  });
+async function getLocalPosts(): Promise<NewsItem[]> {
+  const posts = await prisma.post.findMany({ orderBy: { publishedAt: "desc" } });
   return posts.map(mapPostToNewsItem);
 }
 
+/** Merge curated local posts with live Assembly-Scrape articles (assembly wins on slug collision). */
+async function getMergedPosts(): Promise<NewsItem[]> {
+  const [local, assembly] = await Promise.all([getLocalPosts(), fetchAssemblyNewsItems()]);
+  const bySlug = new Map<string, NewsItem>();
+
+  for (const item of local) bySlug.set(item.slug, item);
+  for (const item of assembly) bySlug.set(item.slug, item);
+
+  return [...bySlug.values()].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
+}
+
+export async function getAllPosts(): Promise<NewsItem[]> {
+  return getMergedPosts();
+}
+
 export async function getNewsBySlug(slug: string): Promise<NewsItem | undefined> {
+  const assembly = await fetchAssemblyNewsBySlug(slug);
+  if (assembly) return assembly;
+
   const post = await prisma.post.findUnique({ where: { slug } });
   return post ? mapPostToNewsItem(post) : undefined;
 }
 
 export async function getFeaturedNews(): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({
+  const prismaFeatured = await prisma.post.findMany({
     where: { featured: true },
     orderBy: { publishedAt: "desc" },
     take: 3,
   });
-  if (posts.length > 0) return posts.map(mapPostToNewsItem);
-  const fallback = await prisma.post.findMany({ orderBy: { publishedAt: "desc" }, take: 3 });
-  return fallback.map(mapPostToNewsItem);
+
+  const posts = await getMergedPosts();
+
+  if (prismaFeatured.length > 0) {
+    const featuredSlugs = new Set(prismaFeatured.map((p) => p.slug));
+    const featured = posts.filter((p) => featuredSlugs.has(p.slug));
+    if (featured.length > 0) return featured.slice(0, 3);
+  }
+
+  return posts.slice(0, 3);
 }
 
 export async function getTrendingNews(): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({
-    orderBy: { viewCount: "desc" },
-    take: 5,
-  });
-  return posts.map(mapPostToNewsItem);
+  const posts = await getMergedPosts();
+  return [...posts].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5);
 }
 
 export async function getNewsByCategory(category: string): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({ orderBy: { publishedAt: "desc" } });
-  return posts
-    .filter((p) => p.category.toLowerCase() === category.toLowerCase())
-    .map(mapPostToNewsItem);
+  const posts = await getMergedPosts();
+  return posts.filter((p) => p.category.toLowerCase() === category.toLowerCase());
 }
 
 export async function getArticleSlugs(): Promise<string[]> {
-  const posts = await prisma.post.findMany({
-    where: { type: "article" },
-    select: { slug: true },
-  });
-  return posts.map((p) => p.slug);
+  const posts = await getMergedPosts();
+  return posts.filter((p) => p.type === "article").map((p) => p.slug);
 }
 
 export async function getVideoSlugs(): Promise<string[]> {
-  const posts = await prisma.post.findMany({
-    where: { type: "video" },
-    select: { slug: true },
-  });
-  return posts.map((p) => p.slug);
+  const posts = await getMergedPosts();
+  return posts.filter((p) => p.type === "video").map((p) => p.slug);
 }
 
 export async function getCategories(): Promise<string[]> {
-  const rows = await prisma.post.findMany({ select: { category: true }, distinct: ["category"] });
-  return rows.map((r) => r.category);
+  const posts = await getMergedPosts();
+  return [...new Set(posts.map((p) => p.category))];
 }
 
 export async function getLockedContentCount(): Promise<number> {
-  return prisma.post.count({ where: { tier: { not: "free" } } });
+  const posts = await getMergedPosts();
+  return posts.filter((p) => p.tier !== "free").length;
 }
 
 export async function getBonusForContent(contentId: string): Promise<BonusContent[]> {
@@ -116,9 +132,6 @@ export async function getBonusForContent(contentId: string): Promise<BonusConten
 }
 
 export async function getExclusivePosts(): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({
-    where: { tier: { not: "free" } },
-    orderBy: { publishedAt: "desc" },
-  });
-  return posts.map(mapPostToNewsItem);
+  const posts = await getMergedPosts();
+  return posts.filter((p) => p.tier !== "free");
 }

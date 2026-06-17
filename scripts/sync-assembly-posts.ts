@@ -1,46 +1,22 @@
 /**
  * Sync published blog_posts from Assembly-Scrape into the local Prisma Post table.
- * Set ASSEMBLY_DATABASE_URL to a PostgreSQL or SQLite URL from Assembly-Scrape.
+ * Runtime reads also pull directly from Assembly-Scrape when ASSEMBLY_DATABASE_URL is set.
  */
 
+import { PrismaClient } from "@prisma/client";
+import { getAssemblyDatabaseUrl } from "../src/lib/assembly/config";
+import { mapAssemblyPostToNewsItem } from "../src/lib/assembly/map";
+import type { AssemblyBlogPost } from "../src/lib/assembly/types";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { PrismaClient } from "@prisma/client";
 import pg from "pg";
 import initSqlJs from "sql.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-interface AssemblyBlogPost {
-  source_entry_id: number;
-  title: string;
-  slug: string;
-  summary: string | null;
-  content: string;
-  meeting_date: string | null;
-  source_url: string | null;
-  created_at: string;
-}
-
-function estimateReadTime(content: string): number {
-  const words = content.trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 200));
-}
-
-function parsePublishedAt(meetingDate: string | null, createdAt: string): Date {
-  if (meetingDate) {
-    const parsed = new Date(meetingDate);
-    if (!Number.isNaN(parsed.getTime())) return parsed;
-  }
-  const created = new Date(createdAt);
-  return Number.isNaN(created.getTime()) ? new Date() : created;
-}
-
-function excerptFrom(row: AssemblyBlogPost): string {
-  if (row.summary?.trim()) return row.summary.trim();
-  const plain = row.content.replace(/[#*_`>\[\]()]/g, " ").replace(/\s+/g, " ").trim();
-  return plain.length > 220 ? `${plain.slice(0, 217)}...` : plain;
+function isPostgresUrl(url: string): boolean {
+  return url.startsWith("postgres://") || url.startsWith("postgresql://");
 }
 
 function resolveSqlitePath(url: string): string {
@@ -49,31 +25,9 @@ function resolveSqlitePath(url: string): string {
     return path.isAbsolute(relative) ? relative : path.join(root, relative);
   }
 
-  // sqlite:///./data/db.sqlite or sqlite:////absolute/path
   const withoutScheme = url.replace(/^sqlite:\/\//, "");
   const normalized = withoutScheme.startsWith("/") ? withoutScheme : `/${withoutScheme}`;
   return path.normalize(normalized);
-}
-
-function isPostgresUrl(url: string): boolean {
-  return url.startsWith("postgres://") || url.startsWith("postgresql://");
-}
-
-/** Skip example/placeholder URLs copied from docs without a real host. */
-function looksLikePlaceholderUrl(url: string): boolean {
-  if (/user:pass@host/i.test(url)) return true;
-  if (/@host(?:[:/]|$)/i.test(url)) return true;
-  if (/example\.com/i.test(url)) return true;
-
-  try {
-    const parsed = new URL(url.replace(/^postgres(ql)?:/, "postgresql:"));
-    const hostname = parsed.hostname.toLowerCase();
-    if (!hostname || hostname === "host" || hostname === "localhost.example") return true;
-  } catch {
-    return false;
-  }
-
-  return false;
 }
 
 async function fetchFromPostgres(url: string): Promise<AssemblyBlogPost[]> {
@@ -125,10 +79,8 @@ async function fetchFromSqlite(dbPath: string): Promise<AssemblyBlogPost[]> {
   }
 }
 
-async function fetchAssemblyPosts(url: string): Promise<AssemblyBlogPost[]> {
-  if (isPostgresUrl(url)) {
-    return fetchFromPostgres(url);
-  }
+async function fetchAssemblyRows(url: string): Promise<AssemblyBlogPost[]> {
+  if (isPostgresUrl(url)) return fetchFromPostgres(url);
 
   const dbPath = resolveSqlitePath(url);
   if (!fs.existsSync(dbPath)) {
@@ -140,16 +92,9 @@ async function fetchAssemblyPosts(url: string): Promise<AssemblyBlogPost[]> {
 }
 
 async function main() {
-  const url = process.env.ASSEMBLY_DATABASE_URL?.trim();
+  const url = getAssemblyDatabaseUrl();
   if (!url) {
     console.log("ASSEMBLY_DATABASE_URL not set — skipping assembly post sync.");
-    return;
-  }
-
-  if (looksLikePlaceholderUrl(url)) {
-    console.warn(
-      "ASSEMBLY_DATABASE_URL looks like a placeholder — skipping assembly post sync. Set a real Assembly-Scrape database URL to sync live articles.",
-    );
     return;
   }
 
@@ -157,7 +102,7 @@ async function main() {
   let rows: AssemblyBlogPost[];
 
   try {
-    rows = await fetchAssemblyPosts(url);
+    rows = await fetchAssemblyRows(url);
   } catch (error) {
     console.warn("Assembly post sync failed (build continues with seeded posts):", error);
     return;
@@ -172,22 +117,23 @@ async function main() {
 
   try {
     for (const row of rows) {
+      const mapped = mapAssemblyPostToNewsItem(row);
       const post = {
-        id: `assembly-${row.source_entry_id}`,
-        slug: row.slug,
-        type: "article" as const,
-        tier: "free" as const,
-        title: row.title,
-        excerpt: excerptFrom(row),
-        body: row.content,
-        category: "Politics",
-        author: "Mitchel Turner",
-        publishedAt: parsePublishedAt(row.meeting_date, row.created_at),
-        readTime: estimateReadTime(row.content),
+        id: mapped.id,
+        slug: mapped.slug,
+        type: mapped.type,
+        tier: mapped.tier,
+        title: mapped.title,
+        excerpt: mapped.excerpt,
+        body: mapped.body ?? null,
+        category: mapped.category,
+        author: mapped.author,
+        publishedAt: new Date(mapped.publishedAt),
+        readTime: mapped.readTime ?? null,
         imageUrl: null,
-        tags: JSON.stringify(["politics", "assembly", "borough"]),
-        followerCount: 0,
-        viewCount: 0,
+        tags: JSON.stringify(mapped.tags),
+        followerCount: mapped.followerCount,
+        viewCount: mapped.viewCount,
         featured: false,
       };
 
