@@ -41,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploaded post images (keep folder via .gitkeep)
+/public/uploads/posts/*
+!/public/uploads/posts/.gitkeep

@@ -60,13 +60,13 @@ async function getLocalPosts(): Promise<NewsItem[]> {
   return posts.map(mapPostToNewsItem);
 }
 
-/** Merge curated local posts with live Assembly-Scrape articles (assembly wins on slug collision). */
+/** Merge curated local posts with live Assembly-Scrape articles (local DB overrides win). */
 async function getMergedPosts(): Promise<NewsItem[]> {
   const [local, assembly] = await Promise.all([getLocalPosts(), fetchAssemblyNewsItems()]);
   const bySlug = new Map<string, NewsItem>();
 
-  for (const item of local) bySlug.set(item.slug, item);
   for (const item of assembly) bySlug.set(item.slug, item);
+  for (const item of local) bySlug.set(item.slug, item);
 
   return [...bySlug.values()].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
@@ -92,11 +92,11 @@ export async function getAllPosts(): Promise<NewsItem[]> {
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsItem | undefined> {
-  const assembly = await fetchAssemblyNewsBySlug(slug);
-  if (assembly) return assembly;
-
   const post = await prisma.post.findUnique({ where: { slug } });
-  return post ? mapPostToNewsItem(post) : undefined;
+  if (post) return mapPostToNewsItem(post);
+
+  const assembly = await fetchAssemblyNewsBySlug(slug);
+  return assembly;
 }
 
 export async function getFeaturedNews(): Promise<NewsItem[]> {

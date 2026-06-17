@@ -97,6 +97,22 @@ To check Assembly-Scrape itself, open a shell on the **Assembly-Scrape** Railway
 python -m bot.main status
 ```
 
+## Admin dashboard
+
+Edit posts, upload cover images, and override assembly articles at **`/admin`**.
+
+```bash
+# .env
+ADMIN_PASSWORD=your-secure-password
+```
+
+- **`/admin/login`** — sign in with `ADMIN_PASSWORD`
+- **`/admin/posts`** — list all stories (curated + assembly)
+- **`/admin/posts/new`** — create a post
+- **`/admin/posts/[id]/edit`** — edit title, body, slug, category, and cover image
+
+**Images:** paste an external URL or upload JPG/PNG/WebP/GIF (max 5 MB) → saved to `/public/uploads/posts/`. Edits saved to the local database override assembly feed content for that slug.
+
 ## Getting Started
 
 ```bash
