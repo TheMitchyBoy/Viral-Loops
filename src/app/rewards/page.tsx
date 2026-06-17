@@ -1,4 +1,4 @@
-import { getExclusivePosts, getLockedContentCount } from "@/lib/data";
+import { getExclusivePosts, getLockedContentCount } from "@/lib/posts";
 import RewardsClient from "./RewardsClient";
 
 export default async function RewardsPage() {

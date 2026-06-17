@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { getFollowerPerk, SITE_NAME, CITY_NAME, SITE_TAGLINE } from "@/lib/data";
+import { getFollowerPerk } from "@/lib/data";
+import { SITE_NAME, CITY_NAME, SITE_TAGLINE } from "@/lib/brand";
 import { Facebook, Menu, X, Check, Sparkles } from "lucide-react";
 import { useState } from "react";
 

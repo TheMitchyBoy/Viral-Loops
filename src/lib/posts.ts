@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Post as DbPost, BonusContent as DbBonus } from "@prisma/client";
 import { prisma } from "./db";
 import { NewsItem, BonusContent, ContentTier, ContentType } from "./types";

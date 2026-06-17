@@ -1,21 +1,7 @@
-import { NewsItem, BonusContent, RewardTier, CommunityMember } from "./types";
+import { RewardTier, CommunityMember } from "./types";
 
 export { AUTHOR_NAME, SITE_NAME, CITY_NAME, SITE_TAGLINE } from "./brand";
 export { FACEBOOK_PAGE_URL } from "./viral-engine";
-
-export {
-  getAllPosts,
-  getNewsBySlug,
-  getFeaturedNews,
-  getTrendingNews,
-  getNewsByCategory,
-  getArticleSlugs,
-  getVideoSlugs,
-  getCategories,
-  getLockedContentCount,
-  getBonusForContent,
-  getExclusivePosts,
-} from "./posts";
 
 export const MEMBER_PERKS: RewardTier[] = [
   {
@@ -53,9 +39,3 @@ export function getFollowerPerk(profile: { followedFacebook: boolean; facebookUs
   if (profile.followedFacebook && profile.facebookUserId) return MEMBER_PERKS[1];
   return MEMBER_PERKS[0];
 }
-
-/** @deprecated Use getBonusForContent from posts.ts (async) */
-export const BONUS_CONTENT: BonusContent[] = [];
-
-/** @deprecated Use getAllPosts from posts.ts (async) */
-export const NEWS_ITEMS: NewsItem[] = [];

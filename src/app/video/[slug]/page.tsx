@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getNewsBySlug, getVideoSlugs, getBonusForContent } from "@/lib/data";
+import { getNewsBySlug, getVideoSlugs, getBonusForContent } from "@/lib/posts";
 import VideoClient from "./VideoClient";
 
 export async function generateStaticParams() {

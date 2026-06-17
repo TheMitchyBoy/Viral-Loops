@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getNewsBySlug, getArticleSlugs, getBonusForContent } from "@/lib/data";
+import { getNewsBySlug, getArticleSlugs, getBonusForContent } from "@/lib/posts";
 import ArticleClient from "./ArticleClient";
 
 export async function generateStaticParams() {

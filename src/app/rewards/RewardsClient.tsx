@@ -1,7 +1,9 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
-import { MEMBER_PERKS, getFollowerPerk, FACEBOOK_PAGE_URL, SITE_NAME, CITY_NAME } from "@/lib/data";
+import { MEMBER_PERKS, getFollowerPerk } from "@/lib/data";
+import { SITE_NAME, CITY_NAME } from "@/lib/brand";
+import { FACEBOOK_PAGE_URL } from "@/lib/viral-engine";
 import { getAllBadges, openFacebookPage } from "@/lib/viral-engine";
 import { NewsItem } from "@/lib/types";
 import { Facebook, Check, Lock, ExternalLink } from "lucide-react";
