@@ -5,7 +5,7 @@ import path from "node:path";
 import pg from "pg";
 import initSqlJs from "sql.js";
 import { NewsItem } from "../types";
-import { getAssemblyDatabaseUrl, isPostgresUrl } from "./config";
+import { getAssemblyDatabaseUrl, isPostgresUrl, looksLikePlaceholderUrl } from "./config";
 import { mapAssemblyPostToNewsItem } from "./map";
 import { AssemblyBlogPost } from "./types";
 
@@ -138,5 +138,116 @@ export async function fetchAssemblyNewsBySlug(slug: string): Promise<NewsItem | 
   } catch (error) {
     console.warn(`[assembly] Failed to load slug "${slug}":`, error);
     return undefined;
+  }
+}
+
+export interface AssemblyConnectionStatus {
+  configured: boolean;
+  placeholder: boolean;
+  connected: boolean;
+  publishedCount: number;
+  totalCount: number;
+  recentPosts: Array<{ title: string; slug: string }>;
+  error?: string;
+  hint?: string;
+}
+
+function maskDatabaseHost(url: string): string {
+  try {
+    const parsed = new URL(url.replace(/^postgres(ql)?:/, "postgresql:"));
+    return `${parsed.protocol}//***@${parsed.hostname}${parsed.port ? `:${parsed.port}` : ""}${parsed.pathname}`;
+  } catch {
+    return "(invalid url)";
+  }
+}
+
+async function fetchAssemblyCounts(url: string): Promise<{ published: number; total: number }> {
+  if (isPostgresUrl(url)) {
+    const pool = getPgPool(url);
+    const result = await pool.query<{ published: string; total: string }>(`
+      SELECT
+        COUNT(*) FILTER (WHERE published = true)::text AS published,
+        COUNT(*)::text AS total
+      FROM blog_posts
+    `);
+    const row = result.rows[0];
+    return { published: Number(row?.published ?? 0), total: Number(row?.total ?? 0) };
+  }
+
+  const dbPath = resolveSqlitePath(url);
+  if (!fs.existsSync(dbPath)) return { published: 0, total: 0 };
+
+  const SQL = await initSqlJs();
+  const db = new SQL.Database(fs.readFileSync(dbPath));
+  try {
+    const published = db.exec("SELECT COUNT(*) FROM blog_posts WHERE published = 1");
+    const total = db.exec("SELECT COUNT(*) FROM blog_posts");
+    return {
+      published: Number(published[0]?.values[0]?.[0] ?? 0),
+      total: Number(total[0]?.values[0]?.[0] ?? 0),
+    };
+  } finally {
+    db.close();
+  }
+}
+
+/** Diagnostic helper for deploy debugging (no Python required). */
+export async function getAssemblyConnectionStatus(): Promise<AssemblyConnectionStatus> {
+  const rawUrl = process.env.ASSEMBLY_DATABASE_URL?.trim();
+  if (!rawUrl) {
+    return {
+      configured: false,
+      placeholder: false,
+      connected: false,
+      publishedCount: 0,
+      totalCount: 0,
+      recentPosts: [],
+      hint: "Set ASSEMBLY_DATABASE_URL to your Assembly-Scrape Postgres URL on this service.",
+    };
+  }
+
+  if (looksLikePlaceholderUrl(rawUrl)) {
+    return {
+      configured: true,
+      placeholder: true,
+      connected: false,
+      publishedCount: 0,
+      totalCount: 0,
+      recentPosts: [],
+      error: "ASSEMBLY_DATABASE_URL is still a placeholder",
+      hint: `Replace with the real Postgres URL from your Assembly-Scrape Railway service. Current: ${maskDatabaseHost(rawUrl)}`,
+    };
+  }
+
+  try {
+    const [counts, rows] = await Promise.all([
+      fetchAssemblyCounts(rawUrl),
+      fetchAssemblyRows(),
+    ]);
+
+    return {
+      configured: true,
+      placeholder: false,
+      connected: true,
+      publishedCount: counts.published,
+      totalCount: counts.total,
+      recentPosts: rows.slice(0, 5).map((row) => ({ title: row.title, slug: row.slug })),
+      hint:
+        counts.published === 0
+          ? "Connected but no published blog_posts. Run the Assembly-Scrape bot in its own Railway service."
+          : undefined,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      configured: true,
+      placeholder: false,
+      connected: false,
+      publishedCount: 0,
+      totalCount: 0,
+      recentPosts: [],
+      error: message,
+      hint: `Could not reach ${maskDatabaseHost(rawUrl)}. Use the Postgres URL from Assembly-Scrape; both services should be in the same Railway project for internal hostnames.`,
+    };
   }
 }

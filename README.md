@@ -43,6 +43,33 @@ To add or edit curated posts (investigations, videos, viral loops), update `pris
 
 For production, point `DATABASE_URL` at your site database and `ASSEMBLY_DATABASE_URL` at the Assembly-Scrape Postgres instance before build.
 
+### Checking assembly posts (no Python needed)
+
+**Viral-Loops runs Node.js** — the Assembly-Scrape Python bot runs in a **separate Railway service**. Do not run `python -m bot.main status` inside the Viral-Loops container.
+
+From your browser or shell (while the site is running):
+
+```bash
+curl -s https://YOUR-SITE/api/assembly/status | jq
+```
+
+Healthy response example:
+
+```json
+{
+  "configured": true,
+  "connected": true,
+  "publishedCount": 3,
+  "recentPosts": [{ "title": "...", "slug": "..." }]
+}
+```
+
+To check Assembly-Scrape itself, open a shell on the **Assembly-Scrape** Railway service (not Viral-Loops) and run:
+
+```bash
+python -m bot.main status
+```
+
 ## Getting Started
 
 ```bash
