@@ -15,12 +15,12 @@ export default function NeighborhoodMap() {
   };
 
   return (
-    <section className="bg-white rounded-xl border border-stone-200 p-6">
+    <section className="card p-6">
       <div className="flex items-center gap-2 mb-2">
-        <MapPin className="w-5 h-5 text-brand-600" />
-        <h2 className="text-lg font-bold text-stone-900">Neighborhood Unlock Map</h2>
+        <MapPin className="w-5 h-5 text-cyan-400" />
+        <h2 className="font-display font-bold text-lg">Neighborhood Unlock Map</h2>
       </div>
-      <p className="text-sm text-stone-500 mb-4">
+      <p className="text-sm text-zinc-500 mb-4">
         Exclusive stories unlock when your neighborhood hits a follower threshold. Join your zone!
       </p>
 
@@ -31,9 +31,9 @@ export default function NeighborhoodMap() {
           placeholder="Your zip code"
           value={zip}
           onChange={(e) => setZip(e.target.value.replace(/\D/g, ""))}
-          className="flex-1 border border-stone-200 rounded-lg px-3 py-2 text-sm"
+          className="input-modern flex-1"
         />
-        <button onClick={saveZip} className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700">
+        <button onClick={saveZip} className="btn-primary !px-4 !py-2 text-sm">
           Join Zone
         </button>
       </div>
@@ -48,21 +48,23 @@ export default function NeighborhoodMap() {
           return (
             <div
               key={zone.id}
-              className={`rounded-lg border p-4 ${unlocked ? "border-emerald-200 bg-emerald-50" : "border-stone-200"}`}
+              className={`rounded-xl border p-4 transition-colors ${
+                unlocked ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/[0.08] bg-white/[0.02]"
+              }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm text-stone-900">{zone.name}</span>
+                <span className="font-semibold text-sm text-zinc-200">{zone.name}</span>
                 {unlocked ? (
-                  <Unlock className="w-4 h-4 text-emerald-600" />
+                  <Unlock className="w-4 h-4 text-emerald-400" />
                 ) : (
-                  <Lock className="w-4 h-4 text-stone-400" />
+                  <Lock className="w-4 h-4 text-zinc-600" />
                 )}
               </div>
-              <p className="text-xs text-stone-500 mb-2 line-clamp-1">{zone.storyTitle}</p>
-              <div className="w-full bg-stone-200 rounded-full h-2 mb-1">
+              <p className="text-xs text-zinc-500 mb-2 line-clamp-1">{zone.storyTitle}</p>
+              <div className="w-full bg-white/[0.06] rounded-full h-2 mb-1">
                 <div className="h-2 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: zone.color }} />
               </div>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-zinc-500">
                 {count}/{zone.threshold} followers {isMine && "· You're in!"}
                 {!unlocked && ` · ${zone.threshold - count} to go`}
               </p>

@@ -147,8 +147,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   if (!profile || !community) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
-        <div className="animate-pulse text-stone-400">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)]">
+        <div className="animate-pulse text-zinc-600">Loading...</div>
       </div>
     );
   }

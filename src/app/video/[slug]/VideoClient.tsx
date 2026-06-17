@@ -21,25 +21,25 @@ export default function VideoClient({ video }: VideoClientProps) {
   const bonuses = getBonusForContent(video.id);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-brand-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-cyan-400 mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </Link>
 
       <div className="mb-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded">
+        <span className="label-caps text-cyan-400/80 chip !border-cyan-500/20 !bg-cyan-500/10">
           {video.category} · Video
         </span>
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-bold text-stone-900 leading-tight mb-4">
+      <h1 className="font-display text-3xl md:text-4xl font-bold leading-tight mb-4 tracking-tight">
         {video.title}
       </h1>
 
-      <div className="flex flex-wrap items-center gap-4 text-sm text-stone-500 mb-6">
+      <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 mb-6">
         <span className="flex items-center gap-1.5">
           <User className="w-4 h-4" /> {video.author}
         </span>
@@ -56,7 +56,7 @@ export default function VideoClient({ video }: VideoClientProps) {
 
       {unlocked ? (
         <>
-          <div className="relative aspect-video rounded-xl overflow-hidden mb-6 bg-black shadow-lg">
+          <div className="relative aspect-video rounded-2xl overflow-hidden mb-6 bg-black ring-1 ring-white/[0.08] shadow-2xl shadow-cyan-500/5">
             {video.videoUrl ? (
               <iframe
                 src={video.videoUrl}
@@ -73,22 +73,22 @@ export default function VideoClient({ video }: VideoClientProps) {
             )}
           </div>
 
-          <p className="text-lg text-stone-600 mb-6">{video.excerpt}</p>
+          <p className="text-lg text-zinc-400 mb-6 font-serif">{video.excerpt}</p>
 
           <FollowPrompt contentId={video.id} slug={video.slug} title={video.title} />
           <BonusContentSection bonuses={bonuses} />
         </>
       ) : (
         <>
-          <div className="relative aspect-video rounded-xl overflow-hidden mb-6 bg-stone-900">
+          <div className="relative aspect-video rounded-2xl overflow-hidden mb-6 bg-zinc-950 ring-1 ring-white/[0.08]">
             <Image src={video.imageUrl} alt={video.title} fill className="object-cover opacity-40" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <Play className="w-10 h-10 text-white fill-white" />
+              <div className="w-20 h-20 glass-strong rounded-full flex items-center justify-center">
+                <Play className="w-10 h-10 text-cyan-300 fill-cyan-300" />
               </div>
             </div>
           </div>
-          <p className="text-lg text-stone-600 mb-2">{video.excerpt}</p>
+          <p className="text-lg text-zinc-400 mb-2 font-serif">{video.excerpt}</p>
           <LockOverlay contentId={video.id} slug={video.slug} title={video.title} />
         </>
       )}

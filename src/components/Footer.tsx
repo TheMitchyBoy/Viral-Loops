@@ -1,29 +1,30 @@
 import Link from "next/link";
-import { Facebook } from "lucide-react";
+import { Facebook, Sparkles } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-400 mt-16">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">R</span>
+    <footer className="relative mt-24 border-t border-white/[0.06]">
+      <div className="glow-line mb-0" />
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center">
+                <span className="font-display font-bold text-zinc-950">R</span>
               </div>
-              <span className="text-white font-bold text-lg">Riverside Daily</span>
+              <span className="font-display font-bold text-lg">Riverside Daily</span>
             </div>
-            <p className="text-sm leading-relaxed">
-              Your trusted source for Riverside local news. Follow us on Facebook to unlock exclusive investigations and bonus content.
+            <p className="text-sm text-zinc-500 leading-relaxed">
+              Next-generation local journalism. Community-powered viral loops. Verified exclusive access.
             </p>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Sections</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="label-caps mb-4">Sections</h3>
+            <ul className="space-y-2.5 text-sm">
               {["Politics", "Sports", "Community", "Education", "Investigation"].map((cat) => (
                 <li key={cat}>
-                  <Link href={`/category/${cat.toLowerCase()}`} className="hover:text-white transition-colors">
+                  <Link href={`/category/${cat.toLowerCase()}`} className="text-zinc-500 hover:text-cyan-300 transition-colors">
                     {cat}
                   </Link>
                 </li>
@@ -32,26 +33,27 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Exclusive Access</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/rewards" className="hover:text-white transition-colors">How It Works</Link></li>
-              <li><Link href="/rewards#perks" className="hover:text-white transition-colors">What You Unlock</Link></li>
-              <li><Link href="/rewards#badges" className="hover:text-white transition-colors">Badges</Link></li>
+            <h3 className="label-caps mb-4">Platform</h3>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link href="/loops" className="text-zinc-500 hover:text-cyan-300 transition-colors flex items-center gap-1.5"><Sparkles className="w-3 h-3" /> Viral Loops</Link></li>
+              <li><Link href="/rewards" className="text-zinc-500 hover:text-cyan-300 transition-colors">Access & Badges</Link></li>
+              <li><Link href="/rewards#perks" className="text-zinc-500 hover:text-cyan-300 transition-colors">What You Unlock</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Follow Us</h3>
-            <p className="text-sm mb-3">
-              Follow Riverside Daily on Facebook for breaking news alerts and exclusive local content.
+            <h3 className="label-caps mb-4">Connect</h3>
+            <p className="text-sm text-zinc-500 mb-4">
+              Follow on Facebook for breaking alerts and verified exclusive content.
             </p>
-            <Facebook className="w-5 h-5 text-blue-400" />
+            <Facebook className="w-5 h-5 text-cyan-400/70" />
           </div>
         </div>
 
-        <div className="border-t border-stone-800 mt-8 pt-8 text-xs text-center">
-          © 2026 Riverside Daily. Follow on Facebook to unlock exclusive local news content.
-        </div>
+        <div className="glow-line my-10" />
+        <p className="text-xs text-zinc-600 text-center">
+          © 2026 Riverside Daily · Designed for the community
+        </p>
       </div>
     </footer>
   );

@@ -14,21 +14,23 @@ export default function FollowPrompt({ contentId, slug, title }: FollowPromptPro
 
   if (profile.followedFacebook && profile.facebookUserId) {
     return (
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 my-8">
-        <p className="text-sm text-blue-800">
-          <strong>Thanks for following!</strong> You have full access to exclusive Riverside Daily content on Facebook.
+      <div className="card p-5 my-8 border-cyan-400/20 bg-cyan-400/5">
+        <p className="text-sm text-cyan-200/90">
+          <strong className="text-cyan-300">Verified follower</strong> — you have full access to exclusive Riverside Daily content.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-brand-50 border border-blue-200 rounded-xl p-5 my-8">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="card p-5 md:p-6 my-8 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-rose-500/5 pointer-events-none" />
+      <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="font-bold text-stone-900 mb-1">Want more stories like this?</h3>
-          <p className="text-sm text-stone-600">
-            Follow Riverside Daily on Facebook to unlock exclusive investigations, bonus videos, and insider previews.
+          <p className="label-caps text-cyan-400/70 mb-1">Exclusive access</p>
+          <h3 className="font-display font-bold text-zinc-100 mb-1">Want more stories like this?</h3>
+          <p className="text-sm text-zinc-500">
+            Verify your Facebook follow to unlock investigations, bonus videos, and insider previews.
           </p>
         </div>
         <button
@@ -36,7 +38,7 @@ export default function FollowPrompt({ contentId, slug, title }: FollowPromptPro
             setFollowTarget({ id: contentId, slug, title });
             setShowFollowModal(true);
           }}
-          className="flex items-center gap-2 bg-[#1877F2] text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-[#166FE5] transition-colors whitespace-nowrap"
+          className="btn-facebook whitespace-nowrap flex-shrink-0"
         >
           <Facebook className="w-4 h-4" />
           Follow to Unlock

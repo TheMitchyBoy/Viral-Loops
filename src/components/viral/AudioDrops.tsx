@@ -9,32 +9,32 @@ export default function AudioDrops() {
   const verified = profile.followedFacebook && profile.facebookUserId;
 
   return (
-    <section className="bg-stone-900 text-white rounded-xl p-6">
+    <section className="card-solid p-6 ring-1 ring-cyan-500/10">
       <div className="flex items-center gap-2 mb-2">
-        <Mic className="w-5 h-5 text-brand-400" />
-        <h2 className="text-lg font-bold">Voicemail Drops</h2>
+        <Mic className="w-5 h-5 text-cyan-400" />
+        <h2 className="font-display font-bold text-lg">Voicemail Drops</h2>
       </div>
-      <p className="text-sm text-stone-400 mb-5">
+      <p className="text-sm text-zinc-500 mb-5">
         Reporter voicemails — what we couldn&apos;t print. Forward the number to a neighbor who should hear it.
       </p>
       <div className="space-y-4">
         {AUDIO_DROPS.map((drop) => (
-          <div key={drop.id} className="bg-white/5 border border-white/10 rounded-lg p-4">
+          <div key={drop.id} className="glass rounded-xl p-4">
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-sm">{drop.title}</h3>
-              <span className="text-xs text-stone-500">{drop.duration}</span>
+              <h3 className="font-semibold text-sm text-zinc-200">{drop.title}</h3>
+              <span className="text-xs text-zinc-600">{drop.duration}</span>
             </div>
-            <p className="text-xs text-stone-400 mb-3">{drop.description}</p>
+            <p className="text-xs text-zinc-500 mb-3">{drop.description}</p>
             {verified ? (
               <>
-                <p className="text-sm text-stone-300 italic mb-2">&ldquo;{drop.transcript}&rdquo;</p>
-                <div className="flex items-center gap-2 text-brand-400 text-xs">
+                <p className="text-sm text-zinc-300 italic mb-2">&ldquo;{drop.transcript}&rdquo;</p>
+                <div className="flex items-center gap-2 text-cyan-400 text-xs">
                   <Phone className="w-3 h-3" />
                   Forward: {drop.voicemailNumber}
                 </div>
               </>
             ) : (
-              <div className="flex items-center gap-2 text-stone-500 text-xs">
+              <div className="flex items-center gap-2 text-zinc-600 text-xs">
                 <Lock className="w-3 h-3" /> Verify Facebook follow to listen
               </div>
             )}
