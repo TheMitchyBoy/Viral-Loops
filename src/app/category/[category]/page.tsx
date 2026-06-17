@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getNewsByCategory, getCategories } from "@/lib/data";
+import { getNewsByCategory, getCategories } from "@/lib/posts";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";

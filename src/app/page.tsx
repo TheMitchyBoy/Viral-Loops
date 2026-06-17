@@ -1,4 +1,4 @@
-import { getFeaturedNews, getTrendingNews, getAllPosts, getCategories, getLockedContentCount } from "@/lib/data";
+import { getFeaturedNews, getTrendingNews, getAllPosts, getCategories, getLockedContentCount } from "@/lib/posts";
 import NewsCard from "@/components/NewsCard";
 import ViralLoopBanner from "@/components/ViralLoopBanner";
 import { TrendingUp, Lock, Sparkles, Zap } from "lucide-react";
