@@ -41,7 +41,26 @@ Example titles include borough assembly coverage such as *Ketchikan Gateway Boro
 
 To add or edit curated posts (investigations, videos, viral loops), update `prisma/seed.ts` or insert rows directly into the `Post` table, then run `npm run db:seed`.
 
-For production, point `DATABASE_URL` at your site database and `ASSEMBLY_DATABASE_URL` at the Assembly-Scrape Postgres instance before build.
+For production, point `DATABASE_URL` at your site database and set `ASSEMBLY_DATABASE_URL` on the **Viral-Loops** Railway service.
+
+#### Railway setup (important)
+
+1. Open your **Assembly-Scrape** project in Railway.
+2. Click the **Postgres** service → **Variables** (or Connect).
+3. Copy the full **`DATABASE_URL`** value — it looks like:
+   `postgresql://postgres:abc123xyz@some-name.railway.internal:5432/railway`
+   or `postgresql://postgres:abc123xyz@monorail.proxy.rlwy.net:12345/railway`
+4. In your **Viral-Loops** project → **Variables**, set:
+   ```
+   ASSEMBLY_DATABASE_URL=<paste the entire DATABASE_URL here>
+   ```
+5. Redeploy Viral-Loops, then run `npm run assembly:status`.
+
+Do **not** type `HOST.railway.internal` or `USER:PASSWORD` — paste the real URL from Railway.
+
+**Same Railway project:** internal URL (`*.railway.internal`) works.
+
+**Different Railway projects:** use the **public** Postgres URL (`*.proxy.rlwy.net`), not `.railway.internal`.
 
 ### Checking assembly posts (no Python needed)
 

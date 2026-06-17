@@ -10,11 +10,16 @@ export function looksLikePlaceholderUrl(url: string): boolean {
   if (/user:pass@host/i.test(url)) return true;
   if (/@host(?:[:/]|$)/i.test(url)) return true;
   if (/example\.com/i.test(url)) return true;
+  if (/HOST\.railway\.internal/i.test(url)) return true;
+  if (/YOUR[-_]RAILWAY[-_]HOST/i.test(url)) return true;
+  if (/PASSWORD@/i.test(url)) return true;
+  if (/USER:PASSWORD@/i.test(url)) return true;
 
   try {
     const parsed = new URL(url.replace(/^postgres(ql)?:/, "postgresql:"));
     const hostname = parsed.hostname.toLowerCase();
     if (!hostname || hostname === "host" || hostname === "localhost.example") return true;
+    if (hostname.includes("your-railway-host")) return true;
   } catch {
     return false;
   }

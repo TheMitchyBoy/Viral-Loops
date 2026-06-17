@@ -237,15 +237,18 @@ export async function getAssemblyConnectionStatus(): Promise<AssemblyConnectionS
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    const isPlaceholderHost = /ENOTFOUND HOST\.railway\.internal/i.test(message);
     return {
       configured: true,
-      placeholder: false,
+      placeholder: isPlaceholderHost,
       connected: false,
       publishedCount: 0,
       totalCount: 0,
       recentPosts: [],
       error: message,
-      hint: `Could not reach ${maskDatabaseHost(rawUrl)}. Use the Postgres URL from Assembly-Scrape; both services should be in the same Railway project for internal hostnames.`,
+      hint: isPlaceholderHost
+        ? "You copied the docs example literally — replace HOST.railway.internal with the real hostname from Railway → Assembly-Scrape Postgres → Connect → copy DATABASE_URL in full."
+        : `Could not reach ${maskDatabaseHost(rawUrl)}. Copy the full DATABASE_URL from Assembly-Scrape Postgres (not a template). If services are in different Railway projects, use the public Postgres URL (*.proxy.rlwy.net), not .railway.internal.`,
     };
   }
 }
