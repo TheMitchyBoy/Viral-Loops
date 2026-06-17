@@ -56,21 +56,31 @@ function mapBonus(bonus: DbBonus): BonusContent {
 }
 
 async function getLocalPosts(): Promise<NewsItem[]> {
-  const posts = await prisma.post.findMany({ orderBy: { publishedAt: "desc" } });
-  return posts.map(mapPostToNewsItem);
+  try {
+    const posts = await prisma.post.findMany({ orderBy: { publishedAt: "desc" } });
+    return posts.map(mapPostToNewsItem);
+  } catch (error) {
+    console.error("[posts] Local database unavailable:", error);
+    return [];
+  }
 }
 
 /** Merge curated local posts with live Assembly-Scrape articles (local DB overrides win). */
 async function getMergedPosts(): Promise<NewsItem[]> {
-  const [local, assembly] = await Promise.all([getLocalPosts(), fetchAssemblyNewsItems()]);
-  const bySlug = new Map<string, NewsItem>();
+  try {
+    const [local, assembly] = await Promise.all([getLocalPosts(), fetchAssemblyNewsItems()]);
+    const bySlug = new Map<string, NewsItem>();
 
-  for (const item of assembly) bySlug.set(item.slug, item);
-  for (const item of local) bySlug.set(item.slug, item);
+    for (const item of assembly) bySlug.set(item.slug, item);
+    for (const item of local) bySlug.set(item.slug, item);
 
-  return [...bySlug.values()].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  );
+    return [...bySlug.values()].sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    );
+  } catch (error) {
+    console.error("[posts] Failed to merge posts:", error);
+    return [];
+  }
 }
 
 export function isAssemblyPost(item: NewsItem): boolean {
@@ -92,32 +102,41 @@ export async function getAllPosts(): Promise<NewsItem[]> {
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsItem | undefined> {
-  const post = await prisma.post.findUnique({ where: { slug } });
-  if (post) return mapPostToNewsItem(post);
+  try {
+    const post = await prisma.post.findUnique({ where: { slug } });
+    if (post) return mapPostToNewsItem(post);
+  } catch (error) {
+    console.error(`[posts] Local lookup failed for slug "${slug}":`, error);
+  }
 
   const assembly = await fetchAssemblyNewsBySlug(slug);
   return assembly;
 }
 
 export async function getFeaturedNews(): Promise<NewsItem[]> {
-  const assembly = await getAssemblyPosts();
-  if (assembly.length > 0) return assembly.slice(0, 3);
+  try {
+    const assembly = await getAssemblyPosts();
+    if (assembly.length > 0) return assembly.slice(0, 3);
 
-  const prismaFeatured = await prisma.post.findMany({
-    where: { featured: true },
-    orderBy: { publishedAt: "desc" },
-    take: 3,
-  });
+    const prismaFeatured = await prisma.post.findMany({
+      where: { featured: true },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+    });
 
-  const posts = await getMergedPosts();
+    const posts = await getMergedPosts();
 
-  if (prismaFeatured.length > 0) {
-    const featuredSlugs = new Set(prismaFeatured.map((p) => p.slug));
-    const featured = posts.filter((p) => featuredSlugs.has(p.slug));
-    if (featured.length > 0) return featured.slice(0, 3);
+    if (prismaFeatured.length > 0) {
+      const featuredSlugs = new Set(prismaFeatured.map((p) => p.slug));
+      const featured = posts.filter((p) => featuredSlugs.has(p.slug));
+      if (featured.length > 0) return featured.slice(0, 3);
+    }
+
+    return posts.slice(0, 3);
+  } catch (error) {
+    console.error("[posts] getFeaturedNews failed:", error);
+    return [];
   }
-
-  return posts.slice(0, 3);
 }
 
 export async function getTrendingNews(): Promise<NewsItem[]> {

@@ -17,12 +17,19 @@ function parsePublishedAt(meetingDate: string | null, createdAt: string): string
 }
 
 function excerptFrom(row: AssemblyBlogPost): string {
+  const content = row.content ?? "";
   if (row.summary?.trim()) return row.summary.trim();
-  const plain = row.content.replace(/[#*_`>\[\]()]/g, " ").replace(/\s+/g, " ").trim();
-  return plain.length > 220 ? `${plain.slice(0, 217)}...` : plain;
+  const plain = content.replace(/[#*_`>\[\]()]/g, " ").replace(/\s+/g, " ").trim();
+  return plain.length > 220 ? `${plain.slice(0, 217)}...` : plain || row.title;
 }
 
 export function mapAssemblyPostToNewsItem(row: AssemblyBlogPost): NewsItem {
+  const content = row.content ?? "";
+  const createdAt =
+    row.created_at instanceof Date
+      ? row.created_at.toISOString()
+      : String(row.created_at ?? new Date().toISOString());
+
   return {
     id: `assembly-${row.source_entry_id}`,
     slug: row.slug,
@@ -30,11 +37,11 @@ export function mapAssemblyPostToNewsItem(row: AssemblyBlogPost): NewsItem {
     tier: "free",
     title: row.title,
     excerpt: excerptFrom(row),
-    body: row.content,
+    body: content,
     category: "Politics",
     author: "Mitchel Turner",
-    publishedAt: parsePublishedAt(row.meeting_date, row.created_at),
-    readTime: estimateReadTime(row.content),
+    publishedAt: parsePublishedAt(row.meeting_date, createdAt),
+    readTime: estimateReadTime(content || row.title),
     imageUrl: resolveThemedPostImage({
       category: "Politics",
       title: row.title,

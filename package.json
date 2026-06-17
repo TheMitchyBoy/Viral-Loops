@@ -6,7 +6,7 @@
     "postinstall": "prisma generate",
     "dev": "node scripts/prebuild-db.mjs && next dev",
     "build": "node scripts/prebuild-db.mjs && next build",
-    "start": "next start",
+    "start": "node scripts/ensure-db.mjs && next start",
     "lint": "next lint",
     "db:push": "node scripts/db-push.mjs",
     "db:seed": "tsx prisma/seed.ts",

@@ -1,4 +1,4 @@
-import { getFeaturedNews, getTrendingNews, getAssemblyPosts, getCuratedPosts, getCategories, getLockedContentCount } from "@/lib/posts";
+import { getAllPosts, isAssemblyPost } from "@/lib/posts";
 import NewsCard from "@/components/NewsCard";
 import ViralLoopBanner from "@/components/ViralLoopBanner";
 import { TrendingUp, Lock, Sparkles, Zap, Landmark } from "lucide-react";
@@ -8,12 +8,13 @@ import Link from "next/link";
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const assemblyPosts = await getAssemblyPosts();
-  const curatedPosts = await getCuratedPosts();
-  const featured = await getFeaturedNews();
-  const trending = await getTrendingNews();
-  const categories = await getCategories();
-  const lockedCount = await getLockedContentCount();
+  const allPosts = await getAllPosts();
+  const assemblyPosts = allPosts.filter(isAssemblyPost);
+  const curatedPosts = allPosts.filter((p) => !isAssemblyPost(p));
+  const categories = [...new Set(allPosts.map((p) => p.category))];
+  const lockedCount = allPosts.filter((p) => p.tier !== "free").length;
+  const featured = assemblyPosts.length > 0 ? assemblyPosts.slice(0, 3) : allPosts.slice(0, 3);
+  const trending = assemblyPosts.length > 0 ? assemblyPosts.slice(0, 5) : allPosts.slice(0, 5);
 
   const hero = assemblyPosts[0] ?? featured[0];
   const assemblyGrid = assemblyPosts.slice(hero?.id === assemblyPosts[0]?.id ? 1 : 0, 7);

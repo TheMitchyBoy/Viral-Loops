@@ -6,5 +6,5 @@ export interface AssemblyBlogPost {
   content: string;
   meeting_date: string | null;
   source_url: string | null;
-  created_at: string;
+  created_at: string | Date;
 }

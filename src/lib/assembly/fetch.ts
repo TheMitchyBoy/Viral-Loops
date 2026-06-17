@@ -32,6 +32,10 @@ function getPgPool(url: string): pg.Pool {
       connectionString: url,
       ssl: useSsl ? { rejectUnauthorized: false } : undefined,
       max: 4,
+      connectionTimeoutMillis: 10_000,
+    });
+    pgPool.on("error", (err) => {
+      console.warn("[assembly] Postgres pool error:", err);
     });
   }
   return pgPool;
@@ -111,7 +115,16 @@ export async function fetchAssemblyNewsItems(): Promise<NewsItem[]> {
 
   try {
     const rows = await fetchAssemblyRows();
-    const posts = rows.map(mapAssemblyPostToNewsItem);
+    const posts = rows
+      .map((row) => {
+        try {
+          return mapAssemblyPostToNewsItem(row);
+        } catch (error) {
+          console.warn("[assembly] Skipped invalid post row:", row?.slug, error);
+          return null;
+        }
+      })
+      .filter((post): post is NewsItem => post !== null);
 
     if (process.env.NODE_ENV === "development") {
       console.log(`[assembly] Loaded ${posts.length} post(s) from Assembly-Scrape`);
