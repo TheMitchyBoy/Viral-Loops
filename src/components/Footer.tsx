@@ -23,7 +23,7 @@ export default function Footer() {
           <div>
             <h3 className="label-caps mb-4">Sections</h3>
             <ul className="space-y-2.5 text-sm">
-              {["Politics", "Investigation", "Community", "Education", "Food", "Events"].map((cat) => (
+              {["Politics", "Investigation", "Community", "Education", "Maritime", "Events"].map((cat) => (
                 <li key={cat}>
                   <Link href={`/category/${cat.toLowerCase()}`} className="text-zinc-500 hover:text-cyan-300 transition-colors">
                     {cat}

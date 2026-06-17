@@ -1,20 +1,18 @@
 import { notFound } from "next/navigation";
-import { NEWS_ITEMS } from "@/lib/data";
+import { getNewsByCategory, getCategories } from "@/lib/data";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export function generateStaticParams() {
-  const categories = [...new Set(NEWS_ITEMS.map((n) => n.category.toLowerCase()))];
-  return categories.map((category) => ({ category }));
+export async function generateStaticParams() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ category: category.toLowerCase() }));
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
   const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
-  const items = NEWS_ITEMS.filter(
-    (n) => n.category.toLowerCase() === category.toLowerCase()
-  );
+  const items = await getNewsByCategory(category);
 
   if (items.length === 0) notFound();
 

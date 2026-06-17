@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { NewsItem } from "@/lib/types";
-import { getBonusForContent } from "@/lib/data";
+import { BonusContent, NewsItem } from "@/lib/types";
+import { INVESTIGATION_POST_ID } from "@/lib/constants";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
 import FollowPrompt from "@/components/FollowPrompt";
@@ -17,12 +17,13 @@ import { Clock, User, Eye, ArrowLeft } from "lucide-react";
 
 interface ArticlePageProps {
   article: NewsItem;
+  bonuses: BonusContent[];
 }
 
-export default function ArticleClient({ article }: ArticlePageProps) {
+export default function ArticleClient({ article, bonuses }: ArticlePageProps) {
   const { checkUnlocked } = useUser();
   const unlocked = checkUnlocked(article.tier);
-  const bonuses = getBonusForContent(article.id);
+  const isInvestigation = article.id === INVESTIGATION_POST_ID;
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-8 md:py-12">
@@ -64,7 +65,7 @@ export default function ArticleClient({ article }: ArticlePageProps) {
         <Image src={article.imageUrl} alt={article.title} fill className="object-cover" priority />
       </div>
 
-      {article.id === "3" && <StoryCredits storyId="3" />}
+      {isInvestigation && <StoryCredits storyId={INVESTIGATION_POST_ID} />}
 
       {unlocked ? (
         <>
@@ -104,9 +105,9 @@ export default function ArticleClient({ article }: ArticlePageProps) {
         </>
       ) : (
         <>
-          {article.id === "3" && (
+          {isInvestigation && (
             <>
-              <QuestionUnlock storyId="3" storyTitle={article.title} />
+              <QuestionUnlock storyId={INVESTIGATION_POST_ID} storyTitle={article.title} />
               <LiveVoteGate pollId="poll-contamination" />
             </>
           )}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { INVESTIGATION_POST_ID } from "@/lib/constants";
 import { useUser } from "@/context/UserContext";
 import { getViral } from "@/lib/viral-engine";
 import { Sparkles } from "lucide-react";
@@ -44,9 +45,9 @@ export default function ViralLoopsHub() {
           <AlumniLeaderboard />
         </div>
         <MysterySerialWidget />
-        <QuestionUnlock storyId="3" storyTitle="Creek Contamination Investigation" />
+        <QuestionUnlock storyId={INVESTIGATION_POST_ID} storyTitle="PeaceHealth in Ketchikan: A Community Dossier" />
         <LiveVoteGate pollId="poll-contamination" />
-        <StoryCredits storyId="3" />
+        <StoryCredits storyId={INVESTIGATION_POST_ID} />
         <AudioDrops />
         <BusinessLoop />
       </div>

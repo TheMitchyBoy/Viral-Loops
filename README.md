@@ -19,6 +19,23 @@ Independent local news from **Mitchel Turner** covering politics, investigations
 | 11 | **Mystery Serial** | Daily clues + bonus intel for referrers |
 | 12 | **Accountability Receipts** | Shareable proof you read the full story |
 
+## Database (Posts)
+
+Articles and videos are stored in SQLite via Prisma. On first setup:
+
+```bash
+cp .env.example .env
+npm run db:setup
+```
+
+- **`npm run db:setup`** — create/sync schema and seed posts from Mitchel Turner stories
+- **`npm run db:seed`** — re-run seed (upserts posts; safe to repeat)
+- Posts without `imageUrl` in the database use category-based Unsplash placeholders until you upload photos
+
+To add or edit posts, update `prisma/seed.ts` or insert rows directly into the `Post` table, then run `npm run db:seed`.
+
+For production, point `DATABASE_URL` at PostgreSQL and run `prisma db push` + seed before build.
+
 ## Getting Started
 
 ```bash
@@ -38,7 +55,7 @@ Exclusive content requires a **verified Facebook follow** via Login + Graph API.
 ## Key Routes
 
 - `/loops` — All 12 viral loop UIs in one hub
-- `/article/hidden-contamination-river-investigation` — Question unlock, live vote, story credits, receipts
+- `/article/peacehealth-ketchikan-dossier` — Question unlock, live vote, story credits, receipts
 - `?ref=MT-XXXXXX` — Referral links for story credit chain
 
 ## Tech Stack

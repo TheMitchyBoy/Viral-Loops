@@ -1,4 +1,5 @@
 import { UserProfile } from "../types";
+import { INVESTIGATION_POST_ID } from "../constants";
 import { ViralProfile, CommunityState, UserRole } from "./types";
 import {
   NEIGHBORHOOD_ZONES,
@@ -18,9 +19,9 @@ const DEFAULT_COMMUNITY: CommunityState = {
   pollVotes: { "poll-contamination": { publish: 89, redact: 42, wait: 31 } },
   scarcityClaimed: 143,
   storyCredits: [
-    { userId: "demo1", name: "Maria G.", storyId: "3", readersReached: 47 },
-    { userId: "demo2", name: "David K.", storyId: "3", readersReached: 31 },
-    { userId: "demo3", name: "Jennifer L.", storyId: "7", readersReached: 28 },
+    { userId: "demo1", name: "Maria G.", storyId: INVESTIGATION_POST_ID, readersReached: 47 },
+    { userId: "demo2", name: "David K.", storyId: INVESTIGATION_POST_ID, readersReached: 31 },
+    { userId: "demo3", name: "Jennifer L.", storyId: "school-board", readersReached: 28 },
   ],
   alumniCounts: { "2003": 34, "2008": 52, "2015": 41, "2026": 67 },
   referralCounts: {},
@@ -159,7 +160,7 @@ export function processReferral(profile: UserProfile, viral: ViralProfile, refCo
   if (referrerIdx >= 0) {
     community.storyCredits[referrerIdx].readersReached += 1;
   } else {
-    community.storyCredits.push({ userId: refCode, name: "Community Member", storyId: "3", readersReached: 1 });
+    community.storyCredits.push({ userId: refCode, name: "Community Member", storyId: INVESTIGATION_POST_ID, readersReached: 1 });
   }
   saveCommunity(community);
 
@@ -175,7 +176,7 @@ export function creditReferrerOnVerify(referrerCode: string, newUserName: string
     community.storyCredits.push({
       userId: referrerCode,
       name: newUserName,
-      storyId: "3",
+      storyId: INVESTIGATION_POST_ID,
       readersReached: 1,
     });
   }
@@ -306,8 +307,8 @@ export function getUnlockPaths(profile: UserProfile, viral: ViralProfile, commun
   const paths: string[] = [];
   if (profile.followedFacebook && profile.facebookUserId) paths.push("Verified Facebook follow");
   if (isRecruitmentUnlocked(community)) paths.push("Community recruitment goal reached");
-  if (isQuestionGateOpen(community) && storyId === "3") paths.push("Community questions submitted");
-  if (viral.businessCheckIns.length > 0 && storyId === "6") paths.push("Partner business check-in");
+  if (isQuestionGateOpen(community) && storyId === INVESTIGATION_POST_ID) paths.push("Community questions submitted");
+  if (viral.businessCheckIns.length > 0 && storyId === "harbor-expansion") paths.push("Partner business check-in");
   NEIGHBORHOOD_ZONES.filter((z) => z.storyId === storyId).forEach((z) => {
     if (isZoneUnlocked(z.id, community)) paths.push(`${z.name} zone unlocked`);
   });

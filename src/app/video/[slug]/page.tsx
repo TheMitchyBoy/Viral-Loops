@@ -1,14 +1,17 @@
 import { notFound } from "next/navigation";
-import { getNewsBySlug, NEWS_ITEMS } from "@/lib/data";
+import { getNewsBySlug, getVideoSlugs, getBonusForContent } from "@/lib/data";
 import VideoClient from "./VideoClient";
 
-export function generateStaticParams() {
-  return NEWS_ITEMS.filter((n) => n.type === "video").map((n) => ({ slug: n.slug }));
+export async function generateStaticParams() {
+  const slugs = await getVideoSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function VideoPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const video = getNewsBySlug(slug);
+  const video = await getNewsBySlug(slug);
   if (!video || video.type !== "video") notFound();
-  return <VideoClient video={video} />;
+
+  const bonuses = await getBonusForContent(video.id);
+  return <VideoClient video={video} bonuses={bonuses} />;
 }

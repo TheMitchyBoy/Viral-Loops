@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id            String   @id
+  slug          String   @unique
+  type          String   @default("article")
+  tier          String   @default("free")
+  title         String
+  excerpt       String
+  body          String?
+  category      String
+  author        String   @default("Mitchel Turner")
+  publishedAt   DateTime
+  readTime      Int?
+  duration      Int?
+  imageUrl      String?
+  videoUrl      String?
+  tags          String   @default("[]")
+  followerCount Int      @default(0)
+  viewCount     Int      @default(0)
+  featured      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  bonusContent BonusContent[]
+}
+
+model BonusContent {
+  id          String @id
+  parentId    String
+  title       String
+  description String
+  type        String
+  content     String
+
+  post Post @relation(fields: [parentId], references: [id], onDelete: Cascade)
+}

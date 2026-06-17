@@ -1,21 +1,22 @@
-import { NEWS_ITEMS, getFeaturedNews, getTrendingNews, COMMUNITY_HIGHLIGHTS, getLockedContentCount } from "@/lib/data";
+import { getFeaturedNews, getTrendingNews, getAllPosts, getCategories, getLockedContentCount } from "@/lib/data";
 import NewsCard from "@/components/NewsCard";
 import ViralLoopBanner from "@/components/ViralLoopBanner";
 import { TrendingUp, Lock, Sparkles, Zap } from "lucide-react";
 import RecruitmentBar from "@/components/viral/RecruitmentBar";
 import Link from "next/link";
 
-export default function HomePage() {
-  const featured = getFeaturedNews();
-  const trending = getTrendingNews();
-  const categories = [...new Set(NEWS_ITEMS.map((n) => n.category))];
-  const lockedCount = getLockedContentCount();
+export default async function HomePage() {
+  const featured = await getFeaturedNews();
+  const trending = await getTrendingNews();
+  const newsItems = await getAllPosts();
+  const categories = await getCategories();
+  const lockedCount = await getLockedContentCount();
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 md:py-14">
       <div className="mb-8 md:mb-12">
         <p className="label-caps text-cyan-400/70 mb-2">Top Story</p>
-        <NewsCard item={featured[0]} variant="featured" />
+        {featured[0] && <NewsCard item={featured[0]} variant="featured" />}
       </div>
 
       <ViralLoopBanner />
@@ -55,7 +56,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {NEWS_ITEMS.slice(1).map((item) => (
+            {newsItems.slice(1).map((item) => (
               <NewsCard key={item.id} item={item} />
             ))}
           </div>
@@ -81,7 +82,8 @@ export default function HomePage() {
               {lockedCount} stories locked behind verified Facebook follow.
             </p>
             <ul className="space-y-3 mb-5">
-              {NEWS_ITEMS.filter((n) => n.tier !== "free")
+              {newsItems
+                .filter((n) => n.tier !== "free")
                 .slice(0, 3)
                 .map((item) => (
                   <li key={item.id} className="flex items-start gap-2.5 text-sm text-zinc-400">
@@ -101,7 +103,11 @@ export default function HomePage() {
               <h3 className="font-display font-bold">Community</h3>
             </div>
             <div className="space-y-3">
-              {COMMUNITY_HIGHLIGHTS.slice(0, 5).map((entry) => (
+              {[
+                { rank: 1, name: "Maria G.", badge: "💎", label: "Early follower" },
+                { rank: 2, name: "David K.", badge: "👍", label: "Community member" },
+                { rank: 3, name: "Jennifer L.", badge: "👍", label: "Community member" },
+              ].map((entry) => (
                 <div key={entry.rank} className="flex items-center gap-3">
                   <span className="text-xs font-bold text-zinc-600 w-4 tabular-nums">{entry.rank}</span>
                   <span className="text-base">{entry.badge}</span>

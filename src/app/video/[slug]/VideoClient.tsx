@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { NewsItem } from "@/lib/types";
-import { getBonusForContent } from "@/lib/data";
+import { BonusContent, NewsItem } from "@/lib/types";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
 import FollowPrompt from "@/components/FollowPrompt";
@@ -13,12 +12,12 @@ import { Play, User, Eye, ArrowLeft, Clock } from "lucide-react";
 
 interface VideoClientProps {
   video: NewsItem;
+  bonuses: BonusContent[];
 }
 
-export default function VideoClient({ video }: VideoClientProps) {
+export default function VideoClient({ video, bonuses }: VideoClientProps) {
   const { checkUnlocked } = useUser();
   const unlocked = checkUnlocked(video.tier);
-  const bonuses = getBonusForContent(video.id);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">

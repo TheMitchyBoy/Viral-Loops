@@ -10,6 +10,7 @@ import {
   MysterySerial,
 } from "./types";
 import { SITE_NAME } from "../brand";
+import { INVESTIGATION_POST_ID } from "../constants";
 
 export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
   {
@@ -17,8 +18,8 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     name: "Oak Street / Downtown",
     zipCodes: ["92501", "92502"],
     threshold: 15,
-    storyId: "3",
-    storyTitle: "Creek Contamination Investigation",
+    storyId: INVESTIGATION_POST_ID,
+    storyTitle: "PeaceHealth Ketchikan Dossier",
     color: "#ed751a",
   },
   {
@@ -26,8 +27,8 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     name: "Creek View Lane",
     zipCodes: ["92503"],
     threshold: 10,
-    storyId: "3",
-    storyTitle: "Creek Contamination Investigation",
+    storyId: INVESTIGATION_POST_ID,
+    storyTitle: "PeaceHealth Ketchikan Dossier",
     color: "#059669",
   },
   {
@@ -35,8 +36,8 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     name: "Unified School District",
     zipCodes: ["92504"],
     threshold: 20,
-    storyId: "7",
-    storyTitle: "School Board Budget Crisis Coverage",
+    storyId: "school-board",
+    storyTitle: "School Board Decisions Coverage",
     color: "#2563eb",
   },
   {
@@ -44,8 +45,8 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     name: "Restaurant Row / Maple",
     zipCodes: ["92505", "92506"],
     threshold: 12,
-    storyId: "6",
-    storyTitle: "Restaurant Row Insider Preview",
+    storyId: "harbor-expansion",
+    storyTitle: "Harbor Expansion Working Waterfront",
     color: "#9333ea",
   },
   {
@@ -53,8 +54,8 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
     name: "Central Park / Market",
     zipCodes: ["92507"],
     threshold: 8,
-    storyId: "4",
-    storyTitle: "Farmers Market Expansion Guide",
+    storyId: "cruise-season",
+    storyTitle: "Cruise Season Economics Guide",
     color: "#dc2626",
   },
 ];
@@ -62,16 +63,16 @@ export const NEIGHBORHOOD_ZONES: NeighborhoodZone[] = [
 export const LIVE_POLLS: LivePoll[] = [
   {
     id: "poll-contamination",
-    storyId: "3",
-    title: "Contamination Investigation Vote",
-    question: "Should we publish the names of agencies that withheld creek contamination data?",
+    storyId: INVESTIGATION_POST_ID,
+    title: "PeaceHealth Investigation Vote",
+    question: "Should we publish the names of officials who withheld healthcare staffing data from the public?",
     options: [
       { id: "publish", label: "Yes — full transparency" },
       { id: "redact", label: "Redact names, publish findings" },
       { id: "wait", label: "Wait for official response first" },
     ],
     endsAt: "2026-06-20T23:59:59Z",
-    unlockStoryId: "3",
+    unlockStoryId: INVESTIGATION_POST_ID,
   },
 ];
 
@@ -116,10 +117,10 @@ export const SCARCITY_DROP: ScarcityDrop = {
 export const RECRUITMENT_CAMPAIGN: RecruitmentCampaign = {
   id: "release-investigation",
   title: "Community-Powered Release",
-  description: "Help us hit 500 verified Facebook followers to automatically release the full EPA lab results to everyone",
+  description: "Help us hit 500 verified Facebook followers to automatically release the full PeaceHealth dossier to everyone",
   targetFollows: 500,
-  unlockStoryId: "3",
-  unlockLabel: "Full EPA Lab Results & Contamination Map",
+  unlockStoryId: INVESTIGATION_POST_ID,
+  unlockLabel: "Full PeaceHealth Dossier & Document Timeline",
 };
 
 export const BUSINESS_PARTNERS: BusinessPartner[] = [
@@ -127,7 +128,7 @@ export const BUSINESS_PARTNERS: BusinessPartner[] = [
     id: "kims-table",
     name: "Kim's Table",
     checkInCode: "KIM2026",
-    unlockStoryId: "6",
+    unlockStoryId: "harbor-expansion",
     perk: "Unlock Restaurant Row preview + 10% off opening week",
     address: "412 Maple Street",
   },
@@ -135,17 +136,17 @@ export const BUSINESS_PARTNERS: BusinessPartner[] = [
     id: "ember-oak",
     name: "Ember & Oak",
     checkInCode: "EMBER26",
-    unlockStoryId: "6",
+    unlockStoryId: "harbor-expansion",
     perk: "Unlock insider menu preview",
     address: "418 Maple Street",
   },
 ];
 
 export const ALUMNI_CLASSES: AlumniClass[] = [
-  { year: "2003", label: "Class of 2003", storyId: "7" },
-  { year: "2008", label: "Class of 2008", storyId: "7" },
-  { year: "2015", label: "Class of 2015", storyId: "7" },
-  { year: "2026", label: "Class of 2026", storyId: "7" },
+  { year: "2003", label: "Class of 2003", storyId: "school-board" },
+  { year: "2008", label: "Class of 2008", storyId: "school-board" },
+  { year: "2015", label: "Class of 2015", storyId: "school-board" },
+  { year: "2026", label: "Class of 2026", storyId: "school-board" },
 ];
 
 export const ROLE_DEFINITIONS: RoleDefinition[] = [
@@ -158,23 +159,23 @@ export const ROLE_DEFINITIONS: RoleDefinition[] = [
 
 export const MYSTERY_SERIAL: MysterySerial = {
   id: "creek-mystery",
-  title: "The Creek Files",
-  description: "A 7-day mystery investigation. One clue per day for followers. Refer a friend for bonus clues.",
-  finaleStoryId: "3",
+  title: "The Dossier Files",
+  description: "A 7-day mystery investigation into the PeaceHealth story. One clue per day for followers. Refer a friend for bonus clues.",
+  finaleStoryId: INVESTIGATION_POST_ID,
   clues: [
-    { day: 1, title: "Clue 1: The Memo", content: "An internal email dated March 12, 2024 mentions 'elevated readings at Site 7' — no public notice followed." },
-    { day: 2, title: "Clue 2: The Map", content: "Site 7 sits 400 feet from Oak Street bridge. Three families live within 200 feet." },
-    { day: 3, title: "Clue 3: The Number", content: "340 ppm lead. EPA residential limit: 120 ppm." },
-    { day: 4, title: "Clue 4: The Silence", content: "County env director declined 4 interview requests. Written statement only." },
-    { day: 5, title: "Clue 5: The Timeline", content: "Agency knew 14 months before our FOIA. Residents: 0 notifications." },
-    { day: 6, title: "Clue 6: The Source", content: "Meridian Industrial Park runoff channel drains directly into Riverside Creek." },
-    { day: 7, title: "Clue 7: The Reckoning", content: "Full investigation unlocks for verified followers. The names are in the report." },
+    { day: 1, title: "Clue 1: The Memo", content: "An internal email dated March 2023 mentions staffing concerns — no public advisory followed." },
+    { day: 2, title: "Clue 2: The Board Packet", content: "Hospital board minutes reference wait times off-island months before the public Q&A." },
+    { day: 3, title: "Clue 3: The FOIA Gap", content: "Three requested records were redacted under an exemption residents weren't told about." },
+    { day: 4, title: "Clue 4: The Silence", content: "Borough health liaison declined four interview requests. Written statement only." },
+    { day: 5, title: "Clue 5: The Timeline", content: "Internal staffing data existed 14 months before families reported referral delays." },
+    { day: 6, title: "Clue 6: The Source", content: "A former administrator confirms decisions were known at the board level early." },
+    { day: 7, title: "Clue 7: The Reckoning", content: "Full investigation unlocks for verified followers. The names are in the dossier." },
     { day: 0, title: "BONUS: Referrer Intel", content: "A whistleblower confirms two additional sampling sites not in the public record.", bonus: true },
   ],
 };
 
 export const QUESTION_UNLOCK_THRESHOLD = 10;
-export const QUESTION_STORY_ID = "3";
+export const QUESTION_STORY_ID = INVESTIGATION_POST_ID;
 
 export function getZoneByZip(zip: string): NeighborhoodZone | undefined {
   return NEIGHBORHOOD_ZONES.find((z) => z.zipCodes.includes(zip));

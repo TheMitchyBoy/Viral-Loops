@@ -30,6 +30,13 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
+
+# database
+/prisma/dev.db
+/prisma/dev.db-journal
+/prisma/*.db
+/prisma/*.db-journal
 
 # typescript
 *.tsbuildinfo
