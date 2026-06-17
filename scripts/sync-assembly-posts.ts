@@ -59,6 +59,23 @@ function isPostgresUrl(url: string): boolean {
   return url.startsWith("postgres://") || url.startsWith("postgresql://");
 }
 
+/** Skip example/placeholder URLs copied from docs without a real host. */
+function looksLikePlaceholderUrl(url: string): boolean {
+  if (/user:pass@host/i.test(url)) return true;
+  if (/@host(?:[:/]|$)/i.test(url)) return true;
+  if (/example\.com/i.test(url)) return true;
+
+  try {
+    const parsed = new URL(url.replace(/^postgres(ql)?:/, "postgresql:"));
+    const hostname = parsed.hostname.toLowerCase();
+    if (!hostname || hostname === "host" || hostname === "localhost.example") return true;
+  } catch {
+    return false;
+  }
+
+  return false;
+}
+
 async function fetchFromPostgres(url: string): Promise<AssemblyBlogPost[]> {
   const useSsl = !/localhost|127\.0\.0\.1/.test(url);
   const client = new pg.Client({
@@ -129,8 +146,23 @@ async function main() {
     return;
   }
 
+  if (looksLikePlaceholderUrl(url)) {
+    console.warn(
+      "ASSEMBLY_DATABASE_URL looks like a placeholder — skipping assembly post sync. Set a real Assembly-Scrape database URL to sync live articles.",
+    );
+    return;
+  }
+
   console.log("Syncing assembly posts...");
-  const rows = await fetchAssemblyPosts(url);
+  let rows: AssemblyBlogPost[];
+
+  try {
+    rows = await fetchAssemblyPosts(url);
+  } catch (error) {
+    console.warn("Assembly post sync failed (build continues with seeded posts):", error);
+    return;
+  }
+
   if (rows.length === 0) {
     console.log("No published assembly posts found.");
     return;
@@ -173,6 +205,5 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("Assembly post sync failed:", error);
-  process.exit(1);
+  console.warn("Assembly post sync failed (build continues with seeded posts):", error);
 });
