@@ -3,7 +3,7 @@ import "server-only";
 import { Post as DbPost, BonusContent as DbBonus } from "@prisma/client";
 import { prisma } from "./db";
 import { NewsItem, BonusContent, ContentTier, ContentType } from "./types";
-import { resolvePostImage } from "./placeholders";
+import { resolveThemedPostImage } from "./placeholders";
 import { fetchAssemblyNewsBySlug, fetchAssemblyNewsItems } from "./assembly/fetch";
 
 function parseTags(raw: string): string[] {
@@ -29,7 +29,14 @@ export function mapPostToNewsItem(post: DbPost): NewsItem {
     publishedAt: post.publishedAt.toISOString(),
     readTime: post.readTime ?? undefined,
     duration: post.duration ?? undefined,
-    imageUrl: resolvePostImage(post.imageUrl, post.category),
+    imageUrl: resolveThemedPostImage({
+      imageUrl: post.imageUrl,
+      category: post.category,
+      title: post.title,
+      excerpt: post.excerpt,
+      tags: parseTags(post.tags),
+      slug: post.slug,
+    }),
     videoUrl: post.videoUrl ?? undefined,
     tags: parseTags(post.tags),
     followerCount: post.followerCount,

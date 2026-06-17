@@ -1,5 +1,5 @@
 import { NewsItem } from "../types";
-import { resolvePostImage } from "../placeholders";
+import { resolveThemedPostImage } from "../placeholders";
 import { AssemblyBlogPost } from "./types";
 
 function estimateReadTime(content: string): number {
@@ -35,7 +35,13 @@ export function mapAssemblyPostToNewsItem(row: AssemblyBlogPost): NewsItem {
     author: "Mitchel Turner",
     publishedAt: parsePublishedAt(row.meeting_date, row.created_at),
     readTime: estimateReadTime(row.content),
-    imageUrl: resolvePostImage(null, "Politics"),
+    imageUrl: resolveThemedPostImage({
+      category: "Politics",
+      title: row.title,
+      slug: row.slug,
+      excerpt: excerptFrom(row),
+      tags: ["politics", "assembly", "borough"],
+    }),
     tags: ["politics", "assembly", "borough"],
     followerCount: 0,
     viewCount: 0,
