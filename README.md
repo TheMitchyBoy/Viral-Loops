@@ -53,6 +53,14 @@ From your browser or shell (while the site is running):
 curl -s https://YOUR-SITE/api/assembly/status | jq
 ```
 
+**Inside the Viral-Loops container** (no curl required):
+
+```bash
+npm run assembly:status
+```
+
+This checks `ASSEMBLY_DATABASE_URL` directly — the app does not need to be running.
+
 Healthy response example:
 
 ```json
