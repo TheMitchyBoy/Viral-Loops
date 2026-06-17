@@ -9,6 +9,7 @@ import { useUser } from "@/context/UserContext";
 import FollowPrompt from "@/components/FollowPrompt";
 import LockOverlay from "@/components/LockOverlay";
 import BonusContentSection from "@/components/BonusContentSection";
+import ArticleBody from "@/components/ArticleBody";
 import StoryCredits from "@/components/viral/StoryCredits";
 import QuestionUnlock from "@/components/viral/QuestionUnlock";
 import LiveVoteGate from "@/components/viral/LiveVoteGate";
@@ -69,35 +70,7 @@ export default function ArticleClient({ article, bonuses }: ArticlePageProps) {
 
       {unlocked ? (
         <>
-          <div className="prose-news text-lg">
-            {article.body?.split("\n\n").map((paragraph, i) => {
-              if (paragraph.startsWith("**") && paragraph.endsWith("**")) {
-                return (
-                  <h2 key={i} className="font-display text-xl font-bold mt-8 mb-4 text-zinc-100">
-                    {paragraph.replace(/\*\*/g, "")}
-                  </h2>
-                );
-              }
-              if (paragraph.startsWith("- ")) {
-                const items = paragraph.split("\n").filter((l) => l.startsWith("- "));
-                return (
-                  <ul key={i} className="list-disc pl-6 mb-4 space-y-1">
-                    {items.map((item, j) => (
-                      <li key={j}>{item.replace(/^- /, "").replace(/\*\*/g, "")}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              return (
-                <p
-                  key={i}
-                  dangerouslySetInnerHTML={{
-                    __html: paragraph.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"),
-                  }}
-                />
-              );
-            })}
-          </div>
+          <ArticleBody body={article.body ?? ""} />
 
           <FollowPrompt contentId={article.id} slug={article.slug} title={article.title} />
           <InformedReceipt storyId={article.id} storyTitle={article.title} />

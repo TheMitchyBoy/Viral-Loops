@@ -85,6 +85,23 @@ body::before {
   font-family: var(--font-display);
 }
 
+.prose-news h3 {
+  font-family: var(--font-display);
+}
+
+.prose-news ul,
+.prose-news ol {
+  margin-bottom: 1.35rem;
+}
+
+.prose-news li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-news a {
+  color: #22d3ee;
+}
+
 .card {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);

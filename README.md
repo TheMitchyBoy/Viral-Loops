@@ -28,13 +28,20 @@ cp .env.example .env
 npm run db:setup
 ```
 
-- **`npm run db:setup`** — create/sync schema and seed posts from Mitchel Turner stories
+- **`npm run db:setup`** — create/sync schema, seed Mitchel Turner stories, and sync Assembly-Scrape posts when configured
 - **`npm run db:seed`** — re-run seed (upserts posts; safe to repeat)
+- **`npm run db:sync-assembly`** — pull published `blog_posts` from [Assembly-Scrape](https://github.com/TheMitchyBoy/Assembly-Scrape) into the site database
 - Posts without `imageUrl` in the database use category-based Unsplash placeholders until you upload photos
 
-To add or edit posts, update `prisma/seed.ts` or insert rows directly into the `Post` table, then run `npm run db:seed`.
+### Assembly-Scrape integration
 
-For production, point `DATABASE_URL` at PostgreSQL and run `prisma db push` + seed before build.
+Set `ASSEMBLY_DATABASE_URL` in `.env` to the Assembly-Scrape database (PostgreSQL on Railway or local SQLite). On `npm run dev` and `npm run build`, published assembly articles sync automatically — titles, slugs, summaries, and markdown body content from the `blog_posts` table.
+
+Example titles include borough assembly coverage such as *Ketchikan Gateway Borough Assembly Approves Key Amendments and Funding in Special Meeting*. Without `ASSEMBLY_DATABASE_URL`, a sample assembly article is included in the seed for local development.
+
+To add or edit curated posts (investigations, videos, viral loops), update `prisma/seed.ts` or insert rows directly into the `Post` table, then run `npm run db:seed`.
+
+For production, point `DATABASE_URL` at your site database and `ASSEMBLY_DATABASE_URL` at the Assembly-Scrape Postgres instance before build.
 
 ## Getting Started
 

@@ -151,6 +151,38 @@ Verified followers get extended meeting notes, vote breakdowns, and the context 
     featured: false,
   },
   {
+    id: "assembly-special-meeting",
+    slug: "ketchikan-gateway-borough-assembly-approves-key-amendments-and-funding-in-special-meeting",
+    type: "article",
+    tier: "free",
+    title: "Ketchikan Gateway Borough Assembly Approves Key Amendments and Funding in Special Meeting",
+    excerpt:
+      "In a special session, the assembly advanced ordinance changes, approved targeted funding, and set the agenda for upcoming budget decisions.",
+    body: `The Ketchikan Gateway Borough Assembly convened a special meeting this week to address several time-sensitive items that could not wait for the next regular work session.
+
+**What passed**
+- Key amendments to borough code related to harbor operations and administrative procedures
+- Targeted funding allocations for capital maintenance and emergency reserves
+- A revised timeline for upcoming budget hearings and public comment windows
+
+**Why it matters**
+Special sessions are often where consequential decisions move quickly — with less public runway than a standard agenda cycle. Residents who track harbor fees, capital projects, or borough staffing should review the approved amendments before the next budget cycle locks in assumptions.
+
+**What's next**
+Assembly members scheduled follow-up work sessions to reconcile funding priorities with projected cruise and property tax revenue. Public comment will reopen before final budget adoption.
+
+*Source: Ketchikan Gateway Borough Assembly meeting minutes via Laserfiche WebLink.*`,
+    category: "Politics",
+    author: "Mitchel Turner",
+    publishedAt: new Date("2025-06-10T18:00:00Z"),
+    readTime: 4,
+    imageUrl: null,
+    tags: JSON.stringify(["politics", "assembly", "borough"]),
+    followerCount: 89,
+    viewCount: 1240,
+    featured: false,
+  },
+  {
     id: "north-end",
     slug: "life-on-the-north-end",
     type: "article",
