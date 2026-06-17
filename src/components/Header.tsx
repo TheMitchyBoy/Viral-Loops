@@ -16,6 +16,7 @@ export default function Header() {
     { href: "/category/politics", label: "Politics" },
     { href: "/category/sports", label: "Sports" },
     { href: "/category/community", label: "Community" },
+    { href: "/loops", label: "Viral Loops" },
     { href: "/rewards", label: "Access" },
   ];
 

@@ -1,7 +1,8 @@
 import { NEWS_ITEMS, getFeaturedNews, getTrendingNews, COMMUNITY_HIGHLIGHTS, getLockedContentCount } from "@/lib/data";
 import NewsCard from "@/components/NewsCard";
 import ViralLoopBanner from "@/components/ViralLoopBanner";
-import { TrendingUp, Facebook, Lock } from "lucide-react";
+import { TrendingUp, Facebook, Lock, Sparkles } from "lucide-react";
+import RecruitmentBar from "@/components/viral/RecruitmentBar";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -17,6 +18,19 @@ export default function HomePage() {
       </section>
 
       <ViralLoopBanner />
+
+      <div className="mb-8 grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <RecruitmentBar />
+        </div>
+        <Link
+          href="/loops"
+          className="flex items-center justify-center gap-2 bg-gradient-to-br from-brand-600 to-brand-700 text-white rounded-xl p-5 font-semibold hover:from-brand-500 hover:to-brand-600 transition-colors"
+        >
+          <Sparkles className="w-5 h-5" />
+          Explore All 12 Viral Loops →
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">

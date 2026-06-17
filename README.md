@@ -1,74 +1,46 @@
-# Riverside Daily — Local News with Facebook Access
+# Riverside Daily — Local News with 12 Viral Loops
 
-A local news website that uses a verified Facebook follow loop to give readers access to exclusive content.
+A local news website that uses **12 viral loop mechanics** plus verified Facebook follow gates to grow readership and unlock exclusive content.
 
-## Features
+## Viral Loops
 
-### Local News Platform
-- Articles and video content covering politics, sports, community, education, and investigations
-- Category browsing, trending sidebar, and featured stories
-- Responsive, modern news-site design
-
-### Verified Facebook Follow Loop
-- **Follow-to-Unlock**: Follow Riverside Daily on Facebook to access exclusive content
-- **Verified via Facebook Login**: Users log in with Facebook; the server checks they like/follow the page via Graph API
-- **One Follow, Full Access**: A verified follow unlocks all gated content and bonus material
-- **Bonus Content**: Extended articles, bonus videos, and interviews for verified followers
+| # | Loop | Description |
+|---|------|-------------|
+| 1 | **Neighborhood Unlock Map** | Zip codes compete to hit follower thresholds and unlock zone stories |
+| 2 | **Story Credits** | Referrers get public byline credit for readers reached |
+| 3 | **Question-Driven Unlocks** | Community questions unlock full investigations |
+| 4 | **Live Vote Gates** | Verified followers vote on what gets published next |
+| 5 | **Voicemail Drops** | Exclusive reporter audio forwarded to neighbors |
+| 6 | **Flash Scarcity Drops** | Limited spots for exclusive PDFs/assets |
+| 7 | **Community-Powered Release** | 500 verified followers releases the full report |
+| 8 | **Local Business Loop** | Check in at partners (codes: `KIM2026`, `EMBER26`) for perks |
+| 9 | **Alumni Pride** | Riverside High classes compete on follower counts |
+| 10 | **Community Roles** | Scout → Witness → Advocate → Insider progression |
+| 11 | **Mystery Serial** | Daily clues + bonus intel for referrers |
+| 12 | **Accountability Receipts** | Shareable proof you read the full story |
 
 ## Getting Started
 
 ```bash
 npm install
 cp .env.example .env.local
-# Add your Facebook App ID, App Secret, and Page ID
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+- **Home:** http://localhost:3000
+- **Viral Loops Hub:** http://localhost:3000/loops
+- **Access & Badges:** http://localhost:3000/rewards
 
-## Facebook Setup (Required)
+## Facebook Verification
 
-1. Create a [Meta for Developers](https://developers.facebook.com/) app
-2. Add **Facebook Login** product
-3. Set **Valid OAuth Redirect URIs** to your site URL (e.g. `http://localhost:3000`)
-4. Copy your **App ID** and **App Secret**
-5. Find your **Page ID** (Facebook Page → About → Page transparency, or Graph API Explorer)
-6. Add to `.env.local`:
+Exclusive content requires a **verified Facebook follow** via Login + Graph API. See `.env.example` for required Meta app credentials.
 
-```env
-NEXT_PUBLIC_FACEBOOK_APP_ID=your_app_id
-FACEBOOK_APP_SECRET=your_app_secret
-NEXT_PUBLIC_FACEBOOK_PAGE_ID=your_numeric_page_id
-NEXT_PUBLIC_FACEBOOK_PAGE_URL=https://www.facebook.com/yourpage
-```
+## Key Routes
 
-### Permissions
-
-Verification uses the `user_likes` permission to confirm the user likes/follows your page. In **Development** mode, only app admins, developers, and test users can grant this. Submit for **App Review** before going to production.
-
-## How Verification Works
-
-1. User opens locked content
-2. User follows/likes the Facebook page
-3. User clicks **Verify with Facebook** → Facebook Login popup
-4. Client sends access token to `/api/facebook/verify-follow`
-5. Server validates token and checks Graph API `me/likes` for your Page ID
-6. If verified, exclusive content unlocks
+- `/loops` — All 12 viral loop UIs in one hub
+- `/article/hidden-contamination-river-investigation` — Question unlock, live vote, story credits, receipts
+- `?ref=RD-XXXXXX` — Referral links for story credit chain
 
 ## Tech Stack
 
-- **Next.js 15** (App Router)
-- **Facebook JavaScript SDK** + **Graph API**
-- **TypeScript** + **Tailwind CSS 4**
-- Local storage for verified follow status
-
-## Project Structure
-
-```
-src/
-├── app/api/facebook/verify-follow/   # Server-side follow verification
-├── components/FollowModal.tsx        # Follow + verify UI
-├── lib/facebook-config.ts            # Env configuration
-├── lib/facebook-verify.ts            # Graph API verification logic
-└── lib/viral-engine.ts               # Profile & unlock state
-```
+Next.js 15 · TypeScript · Tailwind CSS 4 · Facebook Graph API · localStorage (demo persistence)

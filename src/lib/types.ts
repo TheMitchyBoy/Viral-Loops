@@ -56,6 +56,7 @@ export interface UserProfile {
   facebookName?: string;
   unlockedContent: string[];
   earnedBadges: string[];
+  viral?: import("./viral/types").ViralProfile;
 }
 
 export interface CommunityMember {

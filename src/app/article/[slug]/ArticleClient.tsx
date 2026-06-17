@@ -9,6 +9,10 @@ import { useUser } from "@/context/UserContext";
 import FollowPrompt from "@/components/FollowPrompt";
 import LockOverlay from "@/components/LockOverlay";
 import BonusContentSection from "@/components/BonusContentSection";
+import StoryCredits from "@/components/viral/StoryCredits";
+import QuestionUnlock from "@/components/viral/QuestionUnlock";
+import LiveVoteGate from "@/components/viral/LiveVoteGate";
+import InformedReceipt from "@/components/viral/InformedReceipt";
 import { Clock, User, Eye, ArrowLeft } from "lucide-react";
 
 interface ArticlePageProps {
@@ -60,6 +64,8 @@ export default function ArticleClient({ article }: ArticlePageProps) {
         <Image src={article.imageUrl} alt={article.title} fill className="object-cover" priority />
       </div>
 
+      {article.id === "3" && <StoryCredits storyId="3" />}
+
       {unlocked ? (
         <>
           <div className="prose-news text-stone-800 text-lg">
@@ -93,10 +99,17 @@ export default function ArticleClient({ article }: ArticlePageProps) {
           </div>
 
           <FollowPrompt contentId={article.id} slug={article.slug} title={article.title} />
+          <InformedReceipt storyId={article.id} storyTitle={article.title} />
           <BonusContentSection bonuses={bonuses} />
         </>
       ) : (
         <>
+          {article.id === "3" && (
+            <>
+              <QuestionUnlock storyId="3" storyTitle={article.title} />
+              <LiveVoteGate pollId="poll-contamination" />
+            </>
+          )}
           <div className="prose-news text-stone-800 text-lg blur-sm select-none max-h-64 overflow-hidden">
             <p>{article.body?.substring(0, 500)}...</p>
           </div>

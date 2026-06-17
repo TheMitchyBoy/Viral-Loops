@@ -1,5 +1,13 @@
 import { UserProfile, Badge } from "./types";
 import { FACEBOOK_PAGE_URL } from "./facebook-config";
+import {
+  createDefaultViralProfile,
+  normalizeViralProfile,
+  onVerifiedFollow,
+  processReferral,
+  creditReferrerOnVerify,
+  loadCommunity,
+} from "./viral/engine";
 
 const STORAGE_KEY = "riverside-daily-user";
 
@@ -10,6 +18,11 @@ const BADGES: Badge[] = [
   { id: "investigator", name: "Investigator", description: "Unlocked an exclusive investigation", icon: "🔍" },
   { id: "insider", name: "Insider", description: "Unlocked all exclusive content", icon: "💎" },
   { id: "community-member", name: "Community Member", description: "Joined the Riverside Daily community", icon: "🏘️" },
+  { id: "scout", name: "Scout", icon: "🔭", description: "Submitted a local question that shaped coverage" },
+  { id: "witness", name: "Witness", icon: "📸", description: "Checked in at a partner business" },
+  { id: "advocate", name: "Advocate", icon: "📣", description: "Recruited 3+ verified followers" },
+  { id: "zone-champion", name: "Zone Champion", icon: "🗺️", description: "Helped unlock your neighborhood" },
+  { id: "informed", name: "Informed Citizen", icon: "📋", description: "Generated an accountability receipt" },
 ];
 
 function generateUserId(): string {
@@ -23,12 +36,13 @@ export function createDefaultProfile(): UserProfile {
     followedFacebook: false,
     unlockedContent: [],
     earnedBadges: [],
+    viral: createDefaultViralProfile(),
   };
 }
 
 function normalizeProfile(raw: Record<string, unknown>): UserProfile {
   const base = createDefaultProfile();
-  return {
+  const profile: UserProfile = {
     id: typeof raw.id === "string" ? raw.id : base.id,
     name: typeof raw.name === "string" ? raw.name : base.name,
     followedFacebook: Boolean(raw.followedFacebook),
@@ -37,7 +51,17 @@ function normalizeProfile(raw: Record<string, unknown>): UserProfile {
     facebookName: typeof raw.facebookName === "string" ? raw.facebookName : undefined,
     unlockedContent: Array.isArray(raw.unlockedContent) ? (raw.unlockedContent as string[]) : [],
     earnedBadges: Array.isArray(raw.earnedBadges) ? (raw.earnedBadges as string[]) : [],
+    viral: normalizeViralProfile(raw.viral as Record<string, unknown> | undefined),
   };
+  const community = loadCommunity();
+  if (profile.viral) {
+    profile.viral.referralCount = community.referralCounts[profile.viral.referralCode] ?? profile.viral.referralCount;
+  }
+  return profile;
+}
+
+export function getViral(profile: UserProfile) {
+  return profile.viral ?? createDefaultViralProfile();
 }
 
 export function loadProfile(): UserProfile {
@@ -53,18 +77,21 @@ export function loadProfile(): UserProfile {
 
 export function saveProfile(profile: UserProfile): void {
   if (typeof window === "undefined") return;
+  if (!profile.viral) profile.viral = createDefaultViralProfile();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
 }
 
 export function applyVerifiedFacebookFollow(
   facebookUserId: string,
   facebookName: string | undefined,
-  contentId?: string
+  contentId?: string,
+  referrerCode?: string
 ): UserProfile {
   const profile = loadProfile();
+  const viral = getViral(profile);
 
   profile.followedFacebook = true;
-  profile.followedAt = new Date().toISOString();
+  profile.followedAt = profile.followedAt ?? new Date().toISOString();
   profile.facebookUserId = facebookUserId;
   if (facebookName) {
     profile.facebookName = facebookName;
@@ -75,12 +102,29 @@ export function applyVerifiedFacebookFollow(
     profile.unlockedContent.push(contentId);
   }
 
-  checkBadges(profile);
+  if (referrerCode && referrerCode !== viral.referralCode) {
+    viral.referredBy = referrerCode;
+    creditReferrerOnVerify(referrerCode, profile.name);
+  }
+
+  profile.viral = viral;
+  const result = onVerifiedFollow(profile, viral, referrerCode);
+  checkBadges(result.profile, result.viral);
+  result.profile.viral = result.viral;
+  saveProfile(result.profile);
+  return result.profile;
+}
+
+export function handleReferralOnLoad(refCode: string): UserProfile {
+  const profile = loadProfile();
+  const viral = getViral(profile);
+  viral.referredBy = refCode;
+  profile.viral = viral;
   saveProfile(profile);
   return profile;
 }
 
-function checkBadges(profile: UserProfile): void {
+function checkBadges(profile: UserProfile, viral = getViral(profile)): void {
   const earned = new Set(profile.earnedBadges);
 
   if (profile.followedFacebook && profile.facebookUserId) {
@@ -89,6 +133,11 @@ function checkBadges(profile: UserProfile): void {
   }
   if (profile.unlockedContent.length >= 1) earned.add("investigator");
   if (profile.followedFacebook && profile.unlockedContent.length >= 3) earned.add("insider");
+  if (viral.questionIds.length >= 1) earned.add("scout");
+  if (viral.businessCheckIns.length >= 1) earned.add("witness");
+  if (viral.referralCount >= 3) earned.add("advocate");
+  if (viral.zonesJoined.length >= 1) earned.add("zone-champion");
+  if (viral.informedReceipts.length >= 1) earned.add("informed");
 
   profile.earnedBadges = Array.from(earned);
 }
